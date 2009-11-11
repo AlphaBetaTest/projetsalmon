@@ -1,0 +1,12 @@
+#header1 {
+	margin-bottom:-4px;
+}
+#menu li {
+	overflow:hidden;
+}
+#basMenu {
+	margin-top:380px;
+}
+#menu, #menu ul, #menu li {
+	z-index:100;
+}

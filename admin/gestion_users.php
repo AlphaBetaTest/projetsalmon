@@ -4,7 +4,8 @@ $objet = unserialize($_SESSION['objet']);
 if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 {
 
-
+	if (isset($_GET['log']) && isset($_GET['type']))
+		$objet->supprimer_utilisateur($_GET['log'],$_GET['type']);		
 	
 	echo '<h1>Gestion des utilisateurs</h1>
 	<form name="form" class="form_center" method="post" action="?page=gestion_utilisateur" >		
@@ -76,10 +77,6 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 	
 	echo '</td></tr>
 	</table>';
-
-	
-	if (isset($_GET['log']) && isset($_GET['type']))
-		$objet->supprimer_utilisateur($_GET['log'],$_GET['type']);		
 
 }
 else

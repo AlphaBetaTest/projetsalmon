@@ -13,7 +13,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 	if ($_POST['nom'] != "" && $_POST['prenom'] != "" && $_POST['mdp'] != "" && $_POST['mdp2'] != "" && $_POST['login'] != "")
 	{	
 		$objet->ajouter_utilisateur();			
-		echo 'Utilisateur ajouté ou modifié !
+		echo 'Utilisateur ajouté ou modifié ! Vous allez etre redirigé.
 		<script type="text/javascript">redirection("gestion_utilisateur");</script>';		
 	}
 	else

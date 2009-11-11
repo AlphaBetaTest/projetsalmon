@@ -159,24 +159,22 @@ class prof
 	/*
 	*ajouter à partir d'un fichier CSV les utilisateurs dans la base de donnée (est utilisé uniquement pour les élèves car les professeurs ne changent pas tous les ans)
 	*/
-	public function ajouter_multiutilisateur($fichier)
+	public function ajouter_multiutilisateur($fichier, $niveau)
 	{
 		$infosfichier = pathinfo($fichier['name']);
 		if (strtolower($infosfichier['extension']) == "csv")
 		{
-			$nomfichier = "fichierBD.csv"; // On donne un nom au fichier qui a été uploadé
+			$nomfichier = "fichierBD_".$niveau.".csv"; // On donne un nom au fichier qui a été uploadé
 			$chemin = '../files/'. $nomfichier; // On définit ou il sera placé
 			move_uploaded_file($fichier['tmp_name'], $chemin); // On déplace le fichier dans le dossier "files" du serveur
 			echo "Envoie effectué ! <br/>
 			Traitement du fichier en cours...<br/>";
 		
 			$requete = "INSERT INTO eleves VALUES ";
-			$f = fopen('../files/fichierBD.csv', 'r');
+			$f = fopen('../files/fichierBD_'.$niveau.'.csv', 'r');
 			while ($data = fgetcsv($f, 1000, "," )){
 				$nbre = count($data);
-				print_r($data);
-				die();
-				$requete .= "('" . $data[0] . "','" . $data[1] . "','" . $data[2] . "','" . $data[3] . "','" . $data[4] . "','" . $data[5] . "', '".$data[6]."'),";
+				$requete .= "('" . $data[0] . "','" . $data[1] . "','" . $data[2] . "','" . $data[3] . "','" . $data[4] . "','" . $data[5] . "', '".$niveau."'),";
 			}
 			fclose($f);
 			$requete = substr($requete,0,-1);	
@@ -184,16 +182,15 @@ class prof
 	
 			mysql_query($requete);
 			
-			if(preg_match("Duplicate entry", mysql_error()))
+			if(preg_match("#Duplicate entry#", mysql_error()))
 			{
-				echo 'Un login équivalent a été trouvé dans la base de données, veuillez <a href="suppr_alluser.php">vider la table</a> ou <a href="suppr_user.php">supprimer un utilisateur</a>';
+				echo 'Un login équivalent a été trouvé dans la base de données, veuillez <a href="suppr_alluser.php">vider la table</a> ou <a href="suppr_user.php">supprimer un utilisateur</a>. Vérifiez qu\'il n\'y a pas un login identique pour deux éleves dans le fichier généré par le convertisseur.<br />Erreur MYSQL : '.mysql_error();
 			}
 			else
 			{
 				echo mysql_error();
 			}
-			die('Fin !');
-			header("Location: gestion_users.php");
+			echo '<p>Envoi correctement effectué ! Vous allez etre redirigé.<script type="text/javascript">redirection("gestion_utilisateur");</script></p>';
 			
 		}
 		else

@@ -136,6 +136,7 @@ class prof
 /*--------------------------------------------------------------------------------
 			Fonction admin
 ----------------------------------------------------------------------------------*/
+
 	/*
 	*écritute du fichier contenant les souhaits des binômes afin de le transmettre au responsable des affectations
 	*/
@@ -168,7 +169,7 @@ class prof
 			$chemin = '../files/'. $nomfichier; // On définit ou il sera placé
 			move_uploaded_file($fichier['tmp_name'], $chemin); // On déplace le fichier dans le dossier "files" du serveur
 			echo "Envoie effectué ! <br/>
-			Traitement du fichier en cours...<br/>";
+			Traitement du fichier en cours...<br/><br />";
 		
 			$requete = "INSERT INTO eleves VALUES ";
 			$f = fopen('../files/fichierBD_'.$niveau.'.csv', 'r');
@@ -178,7 +179,6 @@ class prof
 			}
 			fclose($f);
 			$requete = substr($requete,0,-1);	
-			
 	
 			mysql_query($requete);
 			
@@ -189,8 +189,8 @@ class prof
 			else
 			{
 				echo mysql_error();
+				echo '<p style="font-weight:bold;color:#26a200;">Envoi correctement effectué !</p>';
 			}
-			echo '<p>Envoi correctement effectué ! Vous allez etre redirigé.<script type="text/javascript">redirection("gestion_utilisateur");</script></p>';
 			
 		}
 		else

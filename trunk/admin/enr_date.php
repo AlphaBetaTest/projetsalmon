@@ -64,5 +64,12 @@ echo 'Vous n\'avez pas accès à cette page
 
 if (isset($_POST))
 {
-	$objet->enregistrer_date();
+	$verif = true;
+	for($i = 0; $i<=9; $i++) {
+		if(empty($_POST['j'.$i]))
+			$verif = false;
+	}
+	
+	if($verif)
+		$objet->enregistrer_date();
 }

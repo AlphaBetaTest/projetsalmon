@@ -26,9 +26,9 @@ Exemple de fichier xls :<br />
 <select name="niveau">
 	<option value="A2">A2</option>
     <option value="AS">AS</option>
-    <option value="LP:PGI">LP:PGI</option>
-    <option value="LP:ACPI">LP:ACPI</option>
-    <option value="LP:API-DAE">LP:API-DAE</option>
+    <option value="LP_PGI">LP:PGI</option>
+    <option value="LP_ACPI">LP:ACPI</option>
+    <option value="LP_API">LP:API</option>
 </select>
 </p>
 

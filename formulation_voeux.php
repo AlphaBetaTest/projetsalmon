@@ -9,35 +9,42 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 	
 		if($numbinome != "")
 		{
-			if ($objet->datecorrecte("formulation_voeux"))
-			{
-				echo '<form action="#" method="post" name="formulaire">	
-					  <p>Veuillez formuler 5 voeux en numérotant de 1 à 5 les projets : </p>';	
-		
-				
-				$req2 = mysql_query("SELECT * FROM projets WHERE niveau='" . $objet->info_niveau() . "'");
-				
-				while ( $donnees = mysql_fetch_array($req2)) // affichage des projets
+			$retour = mysql_query('SELECT * FROM wish WHERE id_bin = "'.$numbinome.'"');
+			if(mysql_num_rows($retour) == 0) {
+			
+				if ($objet->datecorrecte("formulation_voeux"))
 				{
-					echo '<p class="info"><input type="text" size="1" name="proj' . $donnees['id_proj'] . '" value="" maxlength="1" onkeyup="checknum(this)"/> <a href = "#" OnClick = "affiche_overlay_window(\'images/load.gif\',\'proj_description.php?id=' . $donnees['id_proj'] . '\');">' . $donnees['titre'] . '</a> <span>' . $donnees['description'] . ' </span></p>';
+					echo '<form action="#" method="post" name="formulaire">	
+						  <p>Veuillez formuler 5 voeux en numérotant de 1 à 5 les projets : </p>';	
+			
+					
+					$req2 = mysql_query("SELECT * FROM projets WHERE niveau='" . $objet->info_niveau() . "'");
+					
+					while ( $donnees = mysql_fetch_array($req2)) // affichage des projets
+					{
+						echo '<p class="info"><input type="text" size="1" name="proj' . $donnees['id_proj'] . '" value="" maxlength="1" onkeyup="checknum(this)"/> <a href = "#" OnClick = "affiche_overlay_window(\'images/load.gif\',\'proj_description.php?id=' . $donnees['id_proj'] . '\');">' . $donnees['titre'] . '</a> <span>' . $donnees['description'] . ' </span></p>';
+					}
+					
+					echo '<p class="info"><input type="hidden" name="ok" value="1" /></p>
+					<p class="info"><input style="border:2px outset white;text-align:center;" type="submit" value="Envoyer" /></p></form>';
+	
+				// traitement résultat formulaire
+	
+					if (isset($_POST['ok']))
+					{
+						echo $objet->traitement_voeux($numbinome);				
+					}
+					
 				}
-				
-				echo '<p class="info"><input type="hidden" name="ok" value="1" /></p>
-				<p class="info"><input style="border:2px outset white;text-align:center;" type="submit" value="Envoyer" /></p></form>';
-
-			// traitement résultat formulaire
-
-				if (isset($_POST['ok']))
+				else
 				{
-					echo $objet->traitement_voeux($numbinome);				
+					echo 'Date d&eacute;pass&eacute;, vous ne pouvez plus formuler de voeux.<br/>
+						En cas de probl&egrave;me, veuillez contacter l\'administrateur
+							<script type="text/javascript">redirection("accueil");</script>';
 				}
-				
 			}
-			else
-			{
-				echo 'Date d&eacute;pass&eacute;, vous ne pouvez plus formuler de voeux.<br/>
-					En cas de probl&egrave;me, veuillez contacter l\'administrateur
-						<script type="text/javascript">redirection("accueil");</script>';
+			else {
+				echo '<p>Votre binome a déja défini ses choix !</p>';
 			}
 			
 		}		

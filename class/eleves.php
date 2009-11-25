@@ -93,16 +93,19 @@ class eleves
 
 	/*
 	* Retourne un texte qui sera affiché à l'utilisateur lors de son passage dans la page choisir_binome
-	* pour l'informer qu'il a été choisi par une personne pour éventuellement orienter son choix
+	* pour l'informer qu'il a été choisi par une ou des personnes pour éventuellement orienter son choix
 	*/
 	public function partenaire()
 	{
 		$data = $this->requete_deja_choisi(); // On récupere le nom de l'utilisateur qui nous a choisit
-		$req=mysql_query("SELECT nom,prenom FROM eleves WHERE login='".$data['nom1']."'");
-		$r=mysql_fetch_assoc($req);
-		if ($data['nom2'] != "")
-		{
-			echo '<p style="font-weight:bold;color:#FF0000;">'.ucfirst(strtolower($r['prenom'])) . ' ' . ucfirst(strtolower($r['nom'])) . ' veut être votre partenaire !</p>';
+		foreach($data as $value) {
+			$req=mysql_query("SELECT nom,prenom FROM eleves WHERE login='".$value."'");
+			$r= mysql_fetch_array($req);
+			
+			if ($value != "")
+			{
+				echo '<p style="font-weight:bold;color:#FF0000;">'.ucfirst(strtolower($r['prenom'])) . ' ' . ucfirst(strtolower($r['nom'])) . ' veut être votre partenaire !</p>';
+			}
 		}
 	}
 
@@ -130,7 +133,8 @@ class eleves
 	}
 	
 	/*
-	*suprime les doublons
+	*suprime les doublons : si nous ou le nom qu'on a choisi existe dans la table binome et qu'il n'est pas validé
+	*alors c'est un doublon
 	*/
 	private function del_useless ($nom2)
 	{
@@ -141,13 +145,16 @@ class eleves
 	}
 
 	/*
-	*retourne le login de la personne qui a choisit l'utilisateur
+	*retourne les login des personnes qui nous ont choisi
 	*/
 	private function requete_deja_choisi()
 	{
-		$req = mysql_query("SELECT nom1,nom2 FROM binome WHERE nom2 = '" . $this->login . "'");
-		$data = mysql_fetch_assoc($req);
-		return $data;
+		$liste_eleves = array();
+		$req = mysql_query("SELECT * FROM binome WHERE nom2 = '" . $this->login . "'");
+		while($data = mysql_fetch_array($req)) {
+			array_push($liste_eleves, $data['nom1']);
+		}
+		return $liste_eleves;
 	}
 	
 	/*
@@ -157,20 +164,20 @@ class eleves
 	{	
 		$data = $this->requete_deja_choisi(); // On vérifie que personne ne nous a choisi
 		
-		if ($data['nom2'] == "") // Si on a pas été choisi
+		if ($data[0] == "") // Si on a pas été choisi
 			mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','" . $nomchoisi . "' , '0','','" . $this->info_niveau() . "')");		
 		else // Si on a été choisie
 		{
-			if ($nomchoisi ==  $data['nom1']) // Si on a été choisi par la personne qu'on désire
-			{							
+			if (in_array($nomchoisi, $data)) // Si on a été choisi par la personne qu'on désire
+			{	
 				mysql_query("UPDATE binome SET valide='1' WHERE nom2 ='" . $this->login . "'");  // Binôme valide car nom1 = nomchoisi			
 				mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $this->login . "'"); // on enlève de la liste le binôme validé
 				mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $nomchoisi . "'");			
-				$this->del_useless($nom2);
-				$this->modif_boolbin(); // On modifie boolbin car le binome existe
+				$this->del_useless($data['nom2']);
+				$this->modif_boolbin(); // On modifie boolbin car le binome existe*/
 			}
 			else // Si on a pas été choisi par la personne qu'on désire
-				mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','" . $nom2 . "' , '0','','" . $this->info_niveau() . "')");			
+				mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','" . $nomchoisi . "' , '0','','" . $this->info_niveau() . "')");			
 		}	
 	}
 	
@@ -190,17 +197,17 @@ class eleves
 	*/
 	public function modifier_binome($nomchoisi)
 	{
-		$this->requete_deja_choisi();
+		$data = $this->requete_deja_choisi();
 		
-		if ($data['nom2'] == "")											
+		if (!in_array($nomchoisi, $data))	// Si on modifie pour une personne qui ne nous a pas choisi										
 			mysql_query("UPDATE binome SET nom2 = '" . $nomchoisi . "' , valide = '0' WHERE nom1 = '" . $this->login ."'");		
-		else
+		else // on modifie pour ne personne qui nous a choisi
 		{											
 			mysql_query("UPDATE binome SET nom2 = '" . $this->login . "' , valide ='1' WHERE nom1 = '" . $nomchoisi ."'");						
 			mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $this->login . "'");							
 			mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $nomchoisi . "'");
-			$this->del_useless($nomchoisi);
-		
+			$this->modif_boolbin();
+			$this->del_useless($nomchoisi);		
 		}
 	}
 
@@ -266,11 +273,11 @@ class eleves
 		}	
 		if ($wish1 != "" && $wish2 != "" && $wish3 != "" && $wish4 != "" && $wish5 != "")
 		{
-			mysql_query("INSERT INTO wish VALUES ('" . $numbinome . "', '" . $wish1 . "', '" . $wish2 . "', '" . $wish3 . "', '" . $wish4 . "', '" . $wish5. "','" . $objet->info_niveau() . "')");
+			mysql_query("INSERT INTO wish VALUES ('" . $numbinome . "', '" . $wish1 . "', '" . $wish2 . "', '" . $wish3 . "', '" . $wish4 . "', '" . $wish5. "','" . $this->info_niveau() . "')");
 			return "Vous souhaits ont &eacute;t&eacute; pris en compte.";
 		}
 		else
-			return "Mauvaise saisi, veuillez recommencer !";
+			return "Mauvaise saisie, veuillez recommencer !";
 	}
 
 	/*

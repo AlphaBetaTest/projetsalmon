@@ -55,8 +55,7 @@ else
 	}
 	else
 	{
-	echo 'Il est trop tôt pour pouvoir consulter la liste
-	vous allez &ecirc;tre redirig&eacute;...
+	echo 'Il est trop tôt pour pouvoir consulter la liste. Vous allez &ecirc;tre redirig&eacute;...
 	<script type="text/javascript">redirection("accueil");</script>';
 	}
 }

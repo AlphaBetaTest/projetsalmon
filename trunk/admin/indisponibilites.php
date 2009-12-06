@@ -16,25 +16,34 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 			<th>Jeudi</th>
 			<th>Vendredi</th>
 			';
+		
+		$indispos = $objet->recup_indisponibilites(); // on récupere les indisponibilités de l'utilisateur si celui ci les a déja rentré
+	
+		$heures_memorisee_lundi = explode(";", $indispos['lundi']);
+		$heures_memorisee_mardi = explode(";", $indispos['mardi']);
+		$heures_memorisee_mercredi = explode(";", $indispos['mercredi']);
+		$heures_memorisee_jeudi = explode(";", $indispos['jeudi']);
+		$heures_memorisee_vendredi = explode(";", $indispos['vendredi']);
+		
 		for ($row = 1 ; $row <= 11 ; $row++)
 		{
 			$h = $row + 7;
 			echo '<tr>
 				<th>' . $h . 'h-' . ($h + 1) . 'h</th>
 			 <td><input type="text" size="10" disabled="true" maxlength="0" style="background-color:';
-			 if (ereg((";" . $row . ";"),$dispo['lundi'])) echo 'red'; else echo 'white';
+			 if (in_array($row, $heures_memorisee_lundi)) echo 'red';
 			echo '"/></td>
 			<td><input type="text" size="10" disabled="true"  maxlength="0" style="background-color:';
-			 if (ereg((";" . $row . ";"),$dispo['mardi'])) echo 'red'; else echo 'white';
+			 if (in_array($row, $heures_memorisee_mardi)) echo 'red';
 			echo '"/></td>
 			<td><input type="text" size="10" disabled="true" maxlength="0" style="background-color:';
-			 if (ereg((";" . $row . ";"),$dispo['mercredi'])) echo 'red'; else echo 'white';
+			 if (in_array($row, $heures_memorisee_mercredi)) echo 'red';
 			echo '"/></td>
 			<td><input type="text" size="10" disabled="true" maxlength="0" style="background-color:';
-			 if (ereg((";" . $row . ";"),$dispo['jeudi'])) echo 'red'; else echo 'white';
+			 if (in_array($row, $heures_memorisee_jeudi)) echo 'red';
 			echo '"/></td>
 			<td><input type="text" size="10" disabled="true" maxlength="0" style="background-color:';
-			 if (ereg((";" . $row . ";"),$dispo['vendredi'])) echo 'red'; else echo 'white';
+			 if (in_array($row, $heures_memorisee_vendredi)) echo 'red';
 			echo '"/></td>
 			</tr>';
 		}

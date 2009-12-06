@@ -92,7 +92,7 @@ function confirmation(page,rubr1,val1,rubr2,val2,cmb)
 	switch(cmb)
 	{
 		case 1:	
-			var reponse = confirm("Etes-vous sur de vouloir supprimer l'utilisateur " + rubr1 + " ?");
+			var reponse = confirm("Etes-vous sur de vouloir supprimer l'utilisateur " + val1 + " ?");
 		break;
 	
 		case 2:	

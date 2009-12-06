@@ -64,7 +64,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 		}
 		if ($type == "prof") echo '<td class="border_cellule"><a href="?page=indisponibilites&log=' . $user['login'] . '"><img src="../images/b_browse.png" alt="Afficher indisponibilités" title="Afficher indisponibilités" /></a>';
 		echo '<td class="border_cellule"><a href="?page=ajouter_utilisateur&mode=Modifier&type=' . $type . '&log=' . $user['login'] . '"><img src="../images/b_edit.png" alt="Modifier" title="Modifier" /></a></td>
-		<td class="border_cellule"><a href="javascript:confirmation(\'gestion_utilisateur\',\''.$user['nom'].'\',\''. $user['login'] . '\',\'type\',\'' . $type . '\',1);"><img src="../images/b_drop.png" alt="Supprimer" title="Supprimer" /></a></td>
+		<td class="border_cellule"><a href="javascript:confirmation(\'gestion_utilisateur\',\'log\',\''. $user['login'] . '\',\'type\',\'' . $type . '\',1);"><img src="../images/b_drop.png" alt="Supprimer" title="Supprimer" /></a></td>
 		</tr>';
 	}
 	

@@ -9,8 +9,8 @@ class prof
 	
 	
 	/*
-	*constructeur, Permet de renseigner les attributs de l'objet
-	*$login  login de l'utilisateur
+	* Constructeur, permet de renseigner les attributs de l'objet
+	* $login : login de l'utilisateur
 	*/
 	public function __construct ($login) // Permet de renseigner les attributs de l'objet
 	{
@@ -25,7 +25,7 @@ class prof
 
 
 	/*
-	*retourne le nom et le prénom sous forme de string de l'utilisateur
+	* Retourne le nom et le prénom de l'utilisateur sous forme de String
 	*/
 	public function name()
 	{
@@ -33,22 +33,23 @@ class prof
 	}
 	
 	/*
-	* retourne vrai si le mot de passe est égal a la string donné en parametre
+	* Retourne vrai si le mot de passe est égal a la string donné en parametre
 	*/
 	public function compare_mdp($mdp) {
 		return $this->password == md5($mdp);
 	}
 
 	/*
-	*retourne le type de l'utilisateur(élèves ou prof)
+	* Retourne le type de l'utilisateur(éleves ou prof)
 	*/
 	public function type()
 	{
-	return "prof";
+		return "prof";
 	}
 
 	/*
-	*rretourne la valeur de droit (1 si administrateur, 0 sinon)
+	* A MODIFIER : ACCESSEUR
+	* Retourne la valeur de droit (1 si administrateur, 0 sinon)
 	*/
 	public function get_droit()
 	{
@@ -56,7 +57,8 @@ class prof
 	}
 
 	/*
-	*retourne le login de l'utilisateur
+	* A MODIFIER : ACCESSEUR
+	* retourne le login de l'utilisateur
 	*/
 	public function info_login()
 	{
@@ -64,7 +66,7 @@ class prof
 	}
 	
 	/*
-	*modifie et enregistre le mot de passe de l'utilisateur
+	* Modifie et enregistre le mot de passe de l'utilisateur
 	*/
 	public function changer_pass($pass)
 	{
@@ -79,7 +81,7 @@ class prof
 	*/
 	public function enregistrer_projet($nomtuteur2,$prenomtuteur2, $titre, $nb_wish, $nb_possible, $qualif, $remarque, $description, $domaine, $materiel,$niveau) 
 	{
-		if (!empty($nomtuteur2)) // Vérification du deuxieme tuteur entré
+		if (!empty($nomtuteur2)) // Vérification du deuxieme tuteur entré : est-il non vide ?
 			{
 				$tut2 = mysql_query("SELECT login FROM prof WHERE (nom='" . strtoupper($nomtuteur2) . "' AND prenom='" . strtolower($prenomtuteur2) . "')") OR die ('Le nom du deuxième tuteur est incorrect');
 				$tut2 = mysql_fetch_assoc($tut2);
@@ -90,7 +92,7 @@ class prof
 				$tut2 = "";
 			}				
 			
-		   $qualif = substr($qualif,0,-1); // supprime le dernier caractère pour éviter d'avoir une virgule en fin de chaine.
+		   $qualif = substr($qualif,0,-1); // supprime le dernier caractere pour éviter d'avoir une virgule en fin de chaine.
 		   // dois-je protéger les variables ? les profs vont-ils s'amuser à mettre du html dans les blocs ?
 		   if( $remarque == "")	$remarque = "Aucune";	
 		   
@@ -101,55 +103,78 @@ class prof
 	}
 	
 	/*
-	*ajoute les indisponibilités d'un prof
+	* Ajoute les indisponibilités d'un prof
 	*/
 	public function ajouter_indisponibilite()
 	{
+		$jours = array('LU','MA','ME','JE','VE'); // Tableau de jours
+
+		for ($j = 0 ; $j <= 4 ; $j++) // Pour chaque jour de la semaine : 5 jours
+		{
+			$semaine[$j] = ";"; // On itinialise chaque début de jour avec un ";" pour avoir un découpage correct plus tard
+			for ($i = 1 ; $i <= 11 ; $i++) // Pour chaque heure de la journée : 11 heures (rajouter 7 heures pour chaque chiffre)
+			{	
+				if ($_POST[$jours[$j] . $i] != "")
+				{
+					$semaine[$j] .= $i . ';'; // On ajoute dans le tableau de chaque jour le numéro de l'heure indisponible
+				}
+			}		
+		}
+		mysql_query("INSERT INTO indisponibilite VALUES ('" . $this->login . "','" . $semaine[0] . "','" . $semaine[1] . "','" . $semaine[2] . "','" . $semaine[3] . "','" . $semaine[4] . "')");
 		
-		$jours = array('LU','MA','ME','JE','VE');
+		echo 'Disponibilités ajoutés';
+	}
+	
+	/*
+	* Permet de récupérer les indisponibilité de l'utilisateur
+	*/
+	public function recup_indisponibilites() {
+		$retour = mysql_query('SELECT * FROM indisponibilite WHERE login = "'.$this->login.'"');
+		$donnees = mysql_fetch_array($retour);
+		return $donnees;		
+	}
+	
+	/*
+	* Permet de modifier les indisponibilités de l'utilisateur
+	* Voir les commentaires de la méthode ajouter_indisponibilte pour détails
+	*/
+	public function modifier_indisponibilite() {
+		$jours = array('LU','MA','ME','JE','VE'); 
 
 		for ($j = 0 ; $j <= 4 ; $j++)
 		{
 			$semaine[$j] = ";";
 			for ($i = 1 ; $i <= 11 ; $i++)
 			{	
-			
 				if ($_POST[$jours[$j] . $i] != "")
 				{
 				$semaine[$j] .= $i . ';';
 				}
 			}		
 		}
-		mysql_query("INSERT INTO indisponibilite VALUES ('" . $this->login . "','" . $semaine[0] . "','" . $semaine[1] . "','" . $semaine[2] . "','" . $semaine[3] . "','" . $semaine[4] . "')");
-		if (mysql_error() == "Duplicate entry '" . $this->login . "' for key 1")
-		{
-		echo 'Vous avez déjà enregistré vos disponibilités !		
-<script type="text/javascript">redirection("accueil");</script>';
-		}
-		else
-		{
-		echo 'Disponibilités ajoutés';
-		}
+		mysql_query("UPDATE indisponibilite SET lundi = '" . $semaine[0] . "', mardi = '" . $semaine[1] . "', mercredi = '" . $semaine[2] . "', jeudi = '" . $semaine[3] . "', vendredi = '" . $semaine[4] . "' WHERE login = '".$this->login."'");
+		echo 'Disponibilités modifiées !';
 	}
 	
 	
 /*--------------------------------------------------------------------------------
-			Fonction admin
+			Fonctions d'administration accessibles seulement si droit = 1
 ----------------------------------------------------------------------------------*/
 
 	/*
-	*écritute du fichier contenant les souhaits des binômes afin de le transmettre au responsable des affectations
+	* Ecritute du fichier contenant les souhaits des binômes afin de le transmettre au responsable des affectations : M.COLETTA
 	*/
 	public function creer_fichier_souhaits()
 	{
-		$MonFichier = "../files/wishbin." . $_GET['niveau'] . ".txt";
-		$F = fopen($MonFichier,"w");
+		$MonFichier = "../files/wishbin." . $_GET['niveau'] . ".txt"; // Chemin du fichier final
+		$F = fopen($MonFichier,"w"); // On crée le fichier
 		$texte = "";
-		$sql = mysql_query("SELECT * FROM wish WHERE niveau= '" . $_GET['niveau'] . "'");
+		$sql = mysql_query("SELECT * FROM wish WHERE niveau= '" . $_GET['niveau'] . "'"); // on récupere tous les souhaits par niveau
 		while ($data = mysql_fetch_array($sql))
 		{
-		$texte .= $data['id_bin'] . "," . $data['wish1'] . "," . $data['wish2'] . "," . $data['wish3'] . "," . $data['wish4'] . "," . $data['wish5'] . "\r\n";
+			$texte .= $data['id_bin'] . "," . $data['wish1'] . "," . $data['wish2'] . "," . $data['wish3'] . "," . $data['wish4'] . "," . $data['wish5'] . "\r\n"; // On crée ligne par ligne le fichier de souhaits
 		}
+		
 		// pour écrire dans le fichier
 		fwrite($F,$texte);
 		fclose($F);
@@ -158,12 +183,12 @@ class prof
 	}
 
 	/*
-	*ajouter à partir d'un fichier CSV les utilisateurs dans la base de donnée (est utilisé uniquement pour les élèves car les professeurs ne changent pas tous les ans)
+	* Ajouter a partir d'un fichier CSV les utilisateurs dans la base de donnée (est utilisé uniquement pour les éleves car les professeurs ne changent pas tous les ans)
 	*/
 	public function ajouter_multiutilisateur($fichier, $niveau)
 	{
 		$infosfichier = pathinfo($fichier['name']);
-		if (strtolower($infosfichier['extension']) == "csv")
+		if (strtolower($infosfichier['extension']) == "csv") // Vérification de l'extension
 		{
 			$nomfichier = "fichierBD_".$niveau.".csv"; // On donne un nom au fichier qui a été uploadé
 			$chemin = '../files/'. $nomfichier; // On définit ou il sera placé
@@ -172,17 +197,17 @@ class prof
 			Traitement du fichier en cours...<br/><br />";
 		
 			$requete = "INSERT INTO eleves VALUES ";
-			$f = fopen('../files/fichierBD_'.$niveau.'.csv', 'r');
-			while ($data = fgetcsv($f, 1000, "," )){
+			$f = fopen('../files/fichierBD_'.$niveau.'.csv', 'r'); // On ouvre le fichier uploadé
+			while ($data = fgetcsv($f, 1000, "," )){ // On parcours le fichier ligne par ligne et on découpe chaque ligne en string a chaque ","
 				$nbre = count($data);
 				$requete .= "('" . $data[0] . "','" . $data[1] . "','" . $data[2] . "','" . $data[3] . "','" . $data[4] . "','" . $data[5] . "', '".$niveau."'),";
 			}
-			fclose($f);
-			$requete = substr($requete,0,-1);	
+			fclose($f); // On ferme le fichier
+			$requete = substr($requete,0,-1); // On eleve la derniere requete car la derniere est créée uniquement par le retour a la ligne automatique dans le fichier (a vérifier)
 	
 			mysql_query($requete);
 			
-			if(preg_match("#Duplicate entry#", mysql_error()))
+			if(preg_match("#Duplicate entry#", mysql_error())) // On vérifie s'il y a un doublon dans les logins
 			{
 				echo 'Un login équivalent a été trouvé dans la base de données, veuillez <a href="suppr_alluser.php">vider la table</a> ou <a href="suppr_user.php">supprimer un utilisateur</a>. Vérifiez qu\'il n\'y a pas un login identique pour deux éleves dans le fichier généré par le convertisseur.<br />Erreur MYSQL : '.mysql_error();
 			}
@@ -190,8 +215,7 @@ class prof
 			{
 				echo mysql_error();
 				echo '<p style="font-weight:bold;color:#26a200;">Envoi correctement effectué !</p>';
-			}
-			
+			}			
 		}
 		else
 		{
@@ -200,7 +224,7 @@ class prof
 	}
 
 	/*
-	*Ajout ou modification des informations d'un utilisateur dans la base de donnée (un élève ou un prof)
+	* Ajout ou modification des informations d'un utilisateur dans la base de donnée (un éleve ou un prof)
 	*/
 	public function ajouter_utilisateur()
 	{
@@ -241,8 +265,8 @@ class prof
 	}
 
 	/*
-	*supprime un binôme 
-	*$id  numéro du binôme à supprimer
+	* Supprime un binôme 
+	* $id : numéro du binôme a supprimer
 	*/
 	public function supprimer_binome($id)
 	{
@@ -251,8 +275,8 @@ class prof
 	}
 
 	/*
-	*mise à zéro du boolbin des deux élèves d'un binôme
-	*$id numéro du binôme a traiter
+	* Mise a zéro du boolbin des deux éleves d'un binôme
+	* $id : numéro du binôme a traiter
 	*/
 	private function rajouter_binome_liste($id)
 	{
@@ -263,7 +287,7 @@ class prof
 	
 	/*
 	* Effectue la modification des binomes
-	* Il faut donc remettre boolbin à 0 puis remettre à 1 pour les deux nouveaux membres
+	* Il faut donc remettre boolbin a 0 puis remettre a 1 pour les deux nouveaux membres
 	*/
 	public function	modifier_binome()
 	{
@@ -279,18 +303,18 @@ class prof
 	*/
 	public function enregistrer_date()
 	{
-		for ($i = 0 ; $i <= 9 ; $i++)
+		for ($i = 0 ; $i <= 9 ; $i++) // Pour chaque mois de l'année scolaire
 		{
-			$moi = $this->mois_en_chiffre($_POST['m' . $i],$mois); 	
-		
-			$dates[$i] = mktime($_POST['h' . $i], $_POST['mm' . $i], 0, $moi, $_POST['j' . $i], $_POST['a' . $i]);
+			$moi = $this->mois_en_chiffre($_POST['m' . $i], $mois); // On récupere le numéro du mois concerné
+			$dates[$i] = mktime($_POST['h' . $i], $_POST['mm' . $i], 0, $moi, $_POST['j' . $i], $_POST['a' . $i]); // On crée le TIMESTAMP de chaque date entrée
 		}
-		$annee = $_POST['a1'];
+		
+		$annee = $_POST['a1']; // On récupere l'année scolaire donnée
 		mysql_query("INSERT INTO date VALUES('" .$annee	. "','" . $dates[0] . "','" . $dates[1] . "','" . $dates[2] . "','" . $dates[3] . "','" . $dates[4] . "','" . $dates[5] . "','" . $dates[6] . "','" . $dates[7] . "','" . $dates[8] . "','" . $dates[9] . "','" . $_POST['niveau'] . "')");
 	}	
 		
 	/*
-	* renvoie le numéro de mois par rapport au mois en toute lettre
+	* Renvoie le numéro de mois par rapport au mois en toute lettre
 	*/	
 	private function  mois_en_chiffre($val,$moi) 
 	{
@@ -303,7 +327,7 @@ class prof
 	}
 
 	/*
-	*fonction de supression d'utilisateur
+	* Fonction de supression d'utilisateur
 	*/
 	public function supprimer_utilisateur($login,$type) 
 	{
@@ -340,7 +364,7 @@ class prof
 	}
 
 	/*
-	* Permet de récupérer le fichier d'affectation et de mettre à jour la base de données
+	* Permet de récupérer le fichier d'affectation et de mettre a jour la base de données
 	*/
 	public function recuperer_affectation($fichier,$niveau)
 	{
@@ -365,8 +389,21 @@ class prof
 		
 		}
 		fclose($F);
-		
-		//echo $cont;
+	}
+	
+	
+	/*
+	*
+	*/
+	public function prof_disponibles_heure($jour, $heure) {
+		$profs_dispos = array();
+		$retour = mysql_query('SELECT * FROM indisponibilite');
+		while($donnees = mysql_fetch_array($retour)) {
+			$indispos_prof = explode(";", $donnees[$jour]); // liste des heures ou le prof n'est pas la le jour demandé
+			if(!in_array($heure, $indispos_prof)) // si l'heure demandé ne fait pas partie de ses indisponibilités
+				$profs_dispos[] = $donnees['login']; // on l'ajoute a la liste des profs disponibles
+		}
+		return $profs_dispos;
 	}
 	
 }

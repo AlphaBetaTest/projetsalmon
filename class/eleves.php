@@ -7,13 +7,13 @@ class eleves
 	private $prenom;
 	private $groupe;
 	private $pwd;
-	private $boolbin;  //entier qui est à 0 lorsque l'élève n'a pas encore validé son binôme (monôme), 1 sinon (utilisé comme booléen)
-	private $niveau;  //type de formation de l'élève (A2,LP,AS)
+	private $boolbin;  //entier qui est a 0 lorsque l'éleve n'a pas encore validé son binôme (monôme), 1 sinon (utilisé comme booléen)
+	private $niveau;  //type de formation de l'élève (A2,LP:PGI,AS, etc)
 
 
 	/*
-	* Constructeur, Permet de renseigner les attributs de l'objet
-	* $login login de l'utilsateur qui vient de se connecter
+	* Constructeur, permet de renseigner les attributs de l'objet
+	* $login : login de l'utilsateur qui vient de se connecter
 	*/
 
 	public function __construct ($login) 
@@ -31,54 +31,59 @@ class eleves
 	
 
 	/*
-	* retourne le type de l'utilisateur (élève ou prof)
+	* Retourne le type de l'utilisateur (éleve ou prof)
 	*/
 
 	public function type()
 	{
-	return "eleves";
+		return "eleves";
 	}
 	
 	
 	/*
-	*retourne la valeur de boolbin
+	* Retourne la valeur de boolbin
 	*/
 
 	public function get_boolbin($valeur)
 	{
-	return ($this->boolbin == $valeur);
+		return ($this->boolbin == $valeur);
 	}
 	
 	/*
-	*retourne 0 car les élèves ne peuvent pas être administrateur (voir classe prof)
+	* Retourne 0 car les éleves ne peuvent pas être administrateur (voir classe prof)
 	*/
 
 	public function get_droit()
 	{
-	return 0;
+		return 0;
 	}
-
 	
 	/*
-	*modifie et enregistre dans la base de donnée le mot de passe
+	* Retourne vrai si le mot de passe est égal a la string donné en parametre
+	*/
+	public function compare_mdp($mdp) {
+		return $this->password == md5($mdp);
+	}
+	
+	/*
+	* Modifie et enregistre dans la base de donnée le mot de passe
 	*/
 	public function changer_pass($pass)
 	{
 		$this->password = md5($pass);
 		mysql_query("UPDATE " . $this->type() . " SET pwd = '" . $this->password . "' WHERE login = '" . $this->login . "'");
-	
 	}
 
-	/*
-	*retourne le login de l'utilisateur
+	/* A MODIFIER : ACCESSEUR
+	* Retourne le login de l'utilisateur
 	*/
 	public function info_login()
 	{ 
 		return $this->login;
 	}
 	
-	/*
-	*retourne le niveau de l'utilisateur
+	/* A MODIFIER : ACCESSEUR
+	* Retourne le niveau de l'utilisateur
 	*/
 	public function info_niveau()
 	{
@@ -88,21 +93,32 @@ class eleves
 		else
 			return $this->niveau;
 	}
-
-	// Pour choose_binome
+	
+	/*
+	* Retourne vrai si l'utilisateur est dans un binome validé
+	*/
+	public function est_en_binome() {
+		$retour = mysql_query('SELECT * FROM binome WHERE nom1 = "'.$this->login.'" OR nom2 = "'.$this->login.'"');
+		$donnees = mysql_fetch_array($retour);
+		
+		if($donnees['valide'] == 1) 
+			return true;
+		else
+			return false;
+	}
 
 	/*
-	* Retourne un texte qui sera affiché à l'utilisateur lors de son passage dans la page choisir_binome
+	* Retourne un texte qui sera affiché a l'utilisateur lors de son passage dans la page choisir_binome
 	* pour l'informer qu'il a été choisi par une ou des personnes pour éventuellement orienter son choix
 	*/
 	public function partenaire()
 	{
-		$data = $this->requete_deja_choisi(); // On récupere le nom de l'utilisateur qui nous a choisit
+		$data = $this->requete_deja_choisi(); // On récupere le nom des utilisateurs qui nous ont choisit
 		foreach($data as $value) {
-			$req=mysql_query("SELECT nom,prenom FROM eleves WHERE login='".$value."'");
+			$req=mysql_query("SELECT nom,prenom FROM eleves WHERE login='".$value."'"); // On récupere le login de chaque personne
 			$r= mysql_fetch_array($req);
 			
-			if ($value != "")
+			if ($value != "") // Si on a été choisi
 			{
 				echo '<p style="font-weight:bold;color:#FF0000;">'.ucfirst(strtolower($r['prenom'])) . ' ' . ucfirst(strtolower($r['nom'])) . ' veut être votre partenaire !</p>';
 			}
@@ -110,7 +126,7 @@ class eleves
 	}
 
 	/*
-	*retourne vrai si l'utilisateur effectue une modification de son choix de binôme, faux sinon
+	* Retourne vrai si l'utilisateur effectue une modification de son choix de binôme, faux sinon
 	*/
 	public function test_modif_choix()
 	{
@@ -123,7 +139,7 @@ class eleves
 	}
 
 	/*
-	*retourne le login de l'utilisateur à partir de son nom et son prénom
+	* Retourne le login de l'utilisateur a partir de son nom et son prénom
 	*/
 	public function renseigner_login($nom,$prenom)
 	{
@@ -133,8 +149,8 @@ class eleves
 	}
 	
 	/*
-	*suprime les doublons : si nous ou le nom qu'on a choisi existe dans la table binome et qu'il n'est pas validé
-	*alors c'est un doublon
+	* Suprime les doublons : si nous ou le nom qu'on a choisi existe dans la table binome et qu'il n'est pas validé
+	* alors c'est un doublon
 	*/
 	private function del_useless ($nom2)
 	{
@@ -145,7 +161,7 @@ class eleves
 	}
 
 	/*
-	*retourne les login des personnes qui nous ont choisi
+	* Retourne les login des personnes qui nous ont choisi
 	*/
 	private function requete_deja_choisi()
 	{
@@ -171,10 +187,10 @@ class eleves
 			if (in_array($nomchoisi, $data)) // Si on a été choisi par la personne qu'on désire
 			{	
 				mysql_query("UPDATE binome SET valide='1' WHERE nom2 ='" . $this->login . "'");  // Binôme valide car nom1 = nomchoisi			
-				mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $this->login . "'"); // on enlève de la liste le binôme validé
+				mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $this->login . "'"); // On enleve de la liste le binôme validé
 				mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $nomchoisi . "'");			
-				$this->del_useless($data['nom2']);
-				$this->modif_boolbin(); // On modifie boolbin car le binome existe*/
+				$this->del_useless($data['nom2']); // On supprime tous les couples de binomes qui sont inutiles
+				$this->modif_boolbin(); // On modifie boolbin car le binome existe
 			}
 			else // Si on a pas été choisi par la personne qu'on désire
 				mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','" . $nomchoisi . "' , '0','','" . $this->info_niveau() . "')");			
@@ -182,18 +198,18 @@ class eleves
 	}
 	
 	/*
-	*ajoute un monôme dans la base et  met a jour boolbin
+	* Ajoute un monôme dans la base et met a jour boolbin
 	*/
 	public function ajouter_monome()
 	{		
-		mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','' , '1','" . $this->info_niveau() . "')"); // valide = 1 car monome donc pas de soucis de deuxième nom
+		mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','' , '1','" . $this->info_niveau() . "')"); // valide = 1 car monome donc pas de soucis de deuxieme nom
 		mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $this->login . "'"); // on retire le monôme de la liste
 
 		$this->del_useless($session,$nom2);	
 	}
 	
 	/*
-	*modifie le binome choisit lors d'une modification, valide le binome sinon
+	* Modifie le binome choisit lors d'une modification, valide le binome sinon
 	*/
 	public function modifier_binome($nomchoisi)
 	{

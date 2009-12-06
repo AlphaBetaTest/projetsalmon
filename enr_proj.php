@@ -5,7 +5,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 {	
 	echo '<h1>Proposition de projet</h1>';	
 
-	if (isset($_POST['description']) && isset($_POST['titre']) && isset($_POST['niveau']))
+	if (isset($_POST['description']) && isset($_POST['titre']) && isset($_POST['niveau']) && !empty($_POST['titre']))
 	{
 		if ($_POST['qualif1']) $qualif .= " analyse & conception,";
 		if ($_POST['qualif2']) $qualif .= " développement & programmation,";
@@ -14,12 +14,10 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 		
 		$niveau = $_POST['niveau'];
 		
-		/*if ($_POST['niveau'] == "LP")
-		{
-			$niveau .= ":" . $_POST['promo'];
-		}*/
-		
 		$objet->enregistrer_projet($_POST['nomtuteur2'],$_POST['prenomtuteur2'], $_POST['titre'], $_POST['wish'], $_POST['possible'], $qualif, $_POST['rem'], $_POST['description'], $_POST['domaine'], $_POST['matos'], $niveau); // s'occuper de niveau quand on aura adapté pour LP et AS.
+	}
+	else {
+		echo '<p style="font-weight:bold;color:#FF0000;">Veuillez remplir correctement tous les champs !</p>';	
 	}
 	
 	$nomcomplet = $objet->name();
@@ -27,14 +25,14 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 	$prenom = substr($nomcomplet,strpos($nomcomplet,' ')+1);	
 	
 
-	echo '<p><b>Niveau : </b><br/>	
+	echo '<p><b>Niveau (obligatoire) : </b><br/>	
 			<form action="?page=enregistrer_projet" method="post" name="formulaire">';
 			
-	$niv = array('A2','LP','AS');
+	$niv = array('A2','AS', 'LP:PGI', 'LP:ACPI', 'LP:API');
 		
-	for ($i = 0 ; $i <= 2 ; $i++)
+	for ($i = 0 ; $i <= 4 ; $i++)
 	{
-		echo '<input type="radio" name="niveau" value="' . $niv[$i] . '" /> '.$niv[$i]; 
+		echo '<input type="radio" name="niveau" value="' . $niv[$i] . '" /> '.$niv[$i].'<br />'; 
 	}
 		
 	if ($_POST['niveau'] == "LP")
@@ -50,7 +48,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 		<br/>
 		Nom <input type="text" size="20" name="nomtuteur2" value="" /> Prénom  <input type="text" size="20" name="prenomtuteur2" value="" /><em> &nbsp;(Laisser vide cette ligne s'il n'y a qu'un seul tuteur)</em>
 		<br/><br/>
-		<b>Titre : </b><br/>
+		<b>Titre (obligatoire) : </b><br/>
 		<input type="text" size="100" name="titre" value="" /><br/><br/>
 		<b>Nombre de binôme souhaités : <input type="text" size="1" name="wish" value="" maxlength="1" /> &nbsp; Nombre de binôme possibles : <input type="text" size="1" maxlength="1" name="possible" /></b><br/><br/>
 		<b>Description : </b><br/>

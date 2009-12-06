@@ -8,7 +8,16 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 		
 		echo'<h1>Choix du bin&ocirc;me</h1>';
 		
-		if ($objet->get_boolbin(0) && $objet->datecorrecte("construction_binome"))
+		/* On vérifie si l'utilisateur est en binome avec est_en_binome() uniquement pour le cas ou l'utilisateur
+		* aurait fait un souhait de binome qu'un autre utilisateur aurait validé mais que ce premier ne ce soit pas déconnecté
+		* entre temps (et ainsi modifier la valeur de boolbin dans l'objet)
+		*/
+		
+		if($objet->get_boolbin(0) && $objet->est_en_binome()) {
+			$objet->modif_boolbin();
+		}
+		
+		if ($objet->get_boolbin(0) && $objet->datecorrecte("construction_binome") && !$objet->est_en_binome())
 		{
 			
 			// traitement formulaire			

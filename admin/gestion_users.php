@@ -1,7 +1,7 @@
 <?php
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
 
 	if (isset($_GET['log']) && isset($_GET['type']))

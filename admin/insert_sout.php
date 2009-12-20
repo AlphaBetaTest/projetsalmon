@@ -1,7 +1,7 @@
 <?php 
 
 $objet = unserialize($_SESSION['objet']);
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
 
 	
@@ -10,8 +10,56 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 	$rowmodif = mysql_fetch_assoc($rowmodif);		
 	isset($_GET['bin']) ? $out = $_GET['bin'] : $out = $_POST['bin'];
 	
-	echo '<h1>Ajouter une soutenance</h1>
+	echo '<h1>Ajouter une soutenance</h1>';
 	
+	echo '<p>Vous pouvez sélectionner une heure pour ajouter une soutenance en cliquant sur une des cases du calendrier.<br /> Les informations complémentaires sur la soutenance vous seront demandées apres.</p>';
+	
+	echo '<p>
+		  <table>
+		  <th>Horaire</th>
+		  <th>Lundi</th>
+		  <th>Mardi</th>
+		  <th>Mercredi</th>
+		  <th>Jeudi</th>
+		  <th>Vendredi</th>';
+	
+	for ($i = 1; $i <= 11 ; $i++)
+	{
+		$h = $i + 7;
+		$profs ="";
+		
+		echo '<tr>';
+		echo '<th>' . $h . 'h-' . ($h + 1) . 'h</th>';
+		$tab = $objet->prof_disponibles_heure("lundi", $i);
+		foreach($tab as $value) $profs.=$value.' / ';
+		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		$profs ="";
+		
+		$tab = $objet->prof_disponibles_heure("mardi", $i);
+		foreach($tab as $value) $profs.=$value.' / ';
+		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		$profs ="";
+		
+		$tab = $objet->prof_disponibles_heure("mercredi", $i);
+		foreach($tab as $value) $profs.=$value.' / ';
+		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		$profs ="";
+		
+		$tab = $objet->prof_disponibles_heure("jeudi", $i);
+		foreach($tab as $value) $profs.=$value.' / ';
+		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		$profs ="";
+		
+		$tab = $objet->prof_disponibles_heure("vendredi", $i);
+		foreach($tab as $value) $profs.=$value.' / ';
+		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		$profs ="";
+		echo ' </tr>';
+	}	
+	echo '<input type="hidden" value="1" name="exist"/>
+	</table><br/>';
+	
+	/*
 	<form name="form" method="post" action="?page=ajouter_soutenance">	
 	<p>Num&eacute;ro du bin&ocirc;me : <input type="text" name="bin" size="4" value="' . $out . '" onchange="document.forms[\'form\'].submit();"/> </p>';
 	
@@ -78,7 +126,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 		
 		<input type="submit" value="Envoyer" />
 		</form>';
-		
+		*/
 				
 }
 else

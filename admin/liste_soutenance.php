@@ -2,7 +2,7 @@
 
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {	
 	include('../cfg.php');
 	
@@ -16,7 +16,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 	<th class="border_cellule">Date</th>
 	<th class="border_cellule">Salle</th>
 	<th class="border_cellule">Tuteur(s)</th>
-	<th class="border_cellule">jur&eacute;</th>	
+	<th class="border_cellule">Jury</th>	
 	<th class="border_cellule" colspan="2">Action</th>';
 	
 	$ret = mysql_query("SELECT s.id_bin,s.date,s.salle,p.tuteur1,p.tuteur2,s.tuteur_comp FROM binome b,soutenance s,projets p WHERE s.id_bin = b.num AND b.id_proj = p.id_proj");	

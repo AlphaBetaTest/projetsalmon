@@ -2,8 +2,11 @@
 
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
+
+	$objet->generer_compteur_csv();
+	echo '<br /><a href="../files/compteur_projet.csv">Télécharger en fichier CSV le compteur</a><br /><br />';
 
 	echo ' <table>
 	<th>Nom</th>

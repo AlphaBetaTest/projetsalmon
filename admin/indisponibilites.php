@@ -1,13 +1,11 @@
 <?php
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
 	
 	if (isset($_GET))
 	{
-		$dispo = mysql_query("SELECT * FROM indisponibilite WHERE login='" . $_GET['log'] . "'");
-		$dispo = mysql_fetch_assoc($dispo);
 		echo '<table>
 			<th>Horaire</th>
 			<th>Lundi</th>
@@ -17,7 +15,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 			<th>Vendredi</th>
 			';
 		
-		$indispos = $objet->recup_indisponibilites(); // on récupere les indisponibilités de l'utilisateur si celui ci les a déja rentré
+		$indispos = $objet->recup_indisponibilites($_GET['log']); // on récupere les indisponibilités de l'utilisateur si celui ci les a déja rentré
 	
 		$heures_memorisee_lundi = explode(";", $indispos['lundi']);
 		$heures_memorisee_mardi = explode(";", $indispos['mardi']);

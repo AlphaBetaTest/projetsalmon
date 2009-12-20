@@ -85,6 +85,7 @@
 	if (!empty($_SESSION['objet']))
 	{
 		echo '<li class="normal"><a href="?page=login&action=modif">Modifier son mot de passe</a></li>';
+		echo '<li class="normal"><a href="?page=login&action=logout">Se déconnecter</a></li>';
 		
 		$objet = unserialize($_SESSION['objet']);				
 		if ($objet->type() == "eleves")
@@ -102,21 +103,32 @@
 		
 			echo '</ul></li>';
 			
-			if ($objet->get_droit() == 1)
+			if ($objet->get_droit(1))
 			{
 				echo '<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);">
-					<a href="index.php">Admin Gestion des projets</a>
+					<a href="../index.php">Admin Gestion des projets</a>
 				<ul>
-					<li class="normal"><a href="admin/index.php?page=creer_fichier_voeux">Cr&eacute;er le fichier de voeux</a></li>
+					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="?page=creer_fichier_voeux">Cr&eacute;er le fichier de voeux</a>
+					<ul>
+						<li class="normal"><a href="admin/index.php?page=creer_fichier_voeux&niveau=A2">Ann&eacute;e 2</a>
+						<li class="normal"><a href="admin/index.php?page=creer_fichier_voeux&niveau=LP">Licence professionnelle</a>
+						<li class="normal"><a href="admin/index.php?page=creer_fichier_voeux&niveau=AS">Ann&eacute;e sp&eacute;ciale</a>
+					</ul></li>
 					<li class="normal"><a href="admin/index.php?page=recuperer_affectation">R&eacute;cup&eacute;rer les affectations</a></li>
 					<li class="normal"><a href="admin/index.php?page=compte_projet_enseignant">Compteur projet/soutenance</a></li>
 					<li class="normal"><a href="admin/index.php?page=gestion_utilisateur">Gestion des utilisateurs</a></li>
 					<li class="normal"><a href="admin/index.php?page=gestion_binome">Gestion des binomes</a></li>
 					<li class="normal"><a href="admin/index.php?page=gestion_soutenance">Gestion des soutenances</a></li>
-					<li class="normal"><a href="admin/index.php?page=enregistrer_date">Enregistrer planning date</a></li>
-					
+					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="#">Enregistrer planning date</a>
+						<ul>
+							<li class="normal"><a href="admin/index.php?page=enregistrer_date&niveau=A2">Ann&eacute;e 2</a></li>
+							<li class="normal"><a href="admin/index.php?page=enregistrer_date&niveau=LP">Licence professionnelle</a></li>
+							<li class="normal"><a href="admin/index.php?page=enregistrer_date&niveau=AS">Ann&eacute;e sp&eacute;ciale</a></li>
+			
+						</ul>
+					</li>					
 			</ul></li>';
-			}			
+			}				
 		}
 	}
 		

@@ -2,9 +2,9 @@
    <head>
        <title>Maquette projet</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />	
-			<link rel="stylesheet" type="text/css" href="bordel/screen.css" media="screen" />
-			<link rel="stylesheet" type="text/css" media="screen" href="bordel/screenIE.css" media="screen" />
-			<link rel="stylesheet" type="text/css" media="screen" href="bordel/screenproj.css" media="screen" />
+			<link rel="stylesheet" type="text/css" href="template/screen.css" media="screen" />
+			<link rel="stylesheet" type="text/css" media="screen" href="template/screenIE.css" media="screen" />
+			<link rel="stylesheet" type="text/css" media="screen" href="template/screenproj.css" media="screen" />
 		<script src="overlay.js"></script>
 	</head>
 <body>

@@ -2,7 +2,7 @@
 
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
 ?>
 <h1> Ajout de la nouvelle promotion </h1>

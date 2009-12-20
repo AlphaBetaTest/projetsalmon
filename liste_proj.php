@@ -9,15 +9,17 @@ if ($_GET['niveau'] == "")
 }
 else
 {
-	$sql = mysql_query("SELECT tuteur1,tuteur2,titre,binwish,remarques FROM projets WHERE niveau LIKE '" . $_GET['niveau'] . "%'") or die("Erreur");
+	$sql = mysql_query("SELECT id_proj,tuteur1,tuteur2,titre,binwish,remarques, groupe, description FROM projets WHERE niveau LIKE '" . $_GET['niveau'] . "%'") or die("Erreur");
 
 
 
 	echo '<table cellspacing="0">
 	<th class="border_cellule">Tuteurs</th>
 	<th class="border_cellule">Intitulé du sujet</th>
+	<th class="border_cellule">Description</th>
 	<th class="border_cellule">Binôme(s) souhaité(s)</th>
-	<th class="border_cellule">Remarques</th>';
+	<th class="border_cellule">Remarques</th>
+	<th class="border_cellule">Groupe</th>';
 
 	if (mysql_num_rows($sql) == 0)
 		echo '<tr><td colspan="4">Aucun projet n\'a &eacute;t&eacute; ajout&eacute; dans cette cat&eacute;gorie</td></tr>';
@@ -30,8 +32,10 @@ else
 			if ($donnees['tuteur2'] != "")	{ echo ' - ' . $donnees['tuteur2']; }
 			echo '</td>
 			<td class="border_cellule">' . $donnees['titre'] . '</td>
+			<td class="border_cellule"><a href="?page=description&id='.$donnees['id_proj'].'" class="survol" title="Description détaillée">'. substr($donnees['description'], 0, 30) .'...<span>'.$donnees['description'].'</span></a></td>
 			<td class="border_cellule">' . $donnees['binwish'] . '</td>
-			<td class="border_cellule">' . $donnees['remarques'] . '</td>
+			<td class="border_cellule"><a href="?page=description&id='.$donnees['id_proj'].'" class="survol" title="Description détaillée">' . substr($donnees['remarques'], 0, 30) . '...<span>'.$donnees['remarques'].'</span></a></td>
+			<td class="border_cellule">' . $donnees['groupe'] . '</td>
 			</tr>';
 		}
 	}

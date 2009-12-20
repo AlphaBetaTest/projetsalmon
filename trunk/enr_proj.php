@@ -14,7 +14,12 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 		
 		$niveau = $_POST['niveau'];
 		
-		$objet->enregistrer_projet($_POST['nomtuteur2'],$_POST['prenomtuteur2'], $_POST['titre'], $_POST['wish'], $_POST['possible'], $qualif, $_POST['rem'], $_POST['description'], $_POST['domaine'], $_POST['matos'], $niveau); // s'occuper de niveau quand on aura adapté pour LP et AS.
+		$groupe = "";
+		if($_POST['DAE'] == "on") $groupe.="DAE;";
+		if($_POST['ACPI'] == "on") $groupe.="ACPI;";
+		if($_POST['PGI'] == "on") $groupe.="PGI;";
+		
+		$objet->enregistrer_projet($_POST['nomtuteur2'],$_POST['prenomtuteur2'], $_POST['titre'], $_POST['wish'], $_POST['possible'], $qualif, $_POST['rem'], $_POST['description'], $_POST['domaine'], $_POST['matos'], $niveau, $groupe); // s'occuper de niveau quand on aura adapté pour LP et AS.
 	}
 	else {
 		echo '<p style="font-weight:bold;color:#FF0000;">Veuillez remplir correctement tous les champs !</p>';	
@@ -25,15 +30,19 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 	$prenom = substr($nomcomplet,strpos($nomcomplet,' ')+1);	
 	
 
-	echo '<p><b>Niveau (obligatoire) : </b><br/>	
+	echo '<p><b>Niveau (obligatoire) : </b>	
 			<form action="?page=enregistrer_projet" method="post" name="formulaire">';
 			
-	$niv = array('A2','AS', 'LP:PGI', 'LP:ACPI', 'LP:API');
+	$niv = array('A2','AS', 'LP');
 		
-	for ($i = 0 ; $i <= 4 ; $i++)
+	for ($i = 0 ; $i <= 2 ; $i++)
 	{
-		echo '<input type="radio" name="niveau" value="' . $niv[$i] . '" /> '.$niv[$i].'<br />'; 
+		echo '<br /><input type="radio" name="niveau" value="' . $niv[$i] . '" /> '.$niv[$i]; 
 	}
+	
+	echo '&nbsp;(PGI : <input type="checkbox" name="PGI" /> / 
+	DAE<input type="checkbox" name="DAE" /> / 
+	ACPI<input type="checkbox" name="ACPI" />)';
 		
 	if ($_POST['niveau'] == "LP")
 	{	

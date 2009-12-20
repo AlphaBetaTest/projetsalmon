@@ -51,9 +51,9 @@ class prof
 	* A MODIFIER : ACCESSEUR
 	* Retourne la valeur de droit (1 si administrateur, 0 sinon)
 	*/
-	public function get_droit()
+	public function get_droit($i)
 	{
-	return $this->droit;
+		return $this->droit == $i;
 	}
 
 	/*
@@ -79,7 +79,7 @@ class prof
 	/*
 	* Ajoute un projet dans la base de données
 	*/
-	public function enregistrer_projet($nomtuteur2,$prenomtuteur2, $titre, $nb_wish, $nb_possible, $qualif, $remarque, $description, $domaine, $materiel,$niveau) 
+	public function enregistrer_projet($nomtuteur2,$prenomtuteur2, $titre, $nb_wish, $nb_possible, $qualif, $remarque, $description, $domaine, $materiel,$niveau, $groupe) 
 	{
 		if (!empty($nomtuteur2)) // Vérification du deuxieme tuteur entré : est-il non vide ?
 			{
@@ -98,7 +98,7 @@ class prof
 		   
 		   if(empty($niveau)) die ('Il n\'y a pas de niveau !<script type="text/javascript">redirection("enregistrer_projet");</script>');
 
-		   mysql_query("INSERT INTO projets VALUES('', '" . $this->login . "','" . $tut2 . "' , '" . $titre . "', '" . $nb_wish . "', '" . $nb_possible . "', '" . $description . "', '" . $qualif . "', '" . $domaine . "', '" . $materiel . "', '" . $remarque . "','" . $niveau . "')");
+		   mysql_query("INSERT INTO projets VALUES('', '" . $this->login . "','" . addslashes($tut2) . "' , '" . addslashes($titre) . "', '" . addslashes($nb_wish) . "', '" . addslashes($nb_possible) . "', '" . addslashes($description) . "', '" . addslashes($qualif) . "', '" . addslashes($domaine) . "', '" . addslashes($materiel) . "', '" . addslashes($remarque) . "','" . addslashes($niveau) . "', '".addslashes($groupe)."')") or die('Probleme lors de l\'ajout d\'un sujet : '.mysql_error());
 			echo '<p style="font-weight:bold;color:#26a200;">Projet ajouté !</p>';
 	}
 	
@@ -122,14 +122,14 @@ class prof
 		}
 		mysql_query("INSERT INTO indisponibilite VALUES ('" . $this->login . "','" . $semaine[0] . "','" . $semaine[1] . "','" . $semaine[2] . "','" . $semaine[3] . "','" . $semaine[4] . "')");
 		
-		echo 'Disponibilités ajoutés';
+		echo '<p style="font-weight:bold;color:#26a200;">Disponibilités ajoutés</p>';
 	}
 	
 	/*
 	* Permet de récupérer les indisponibilité de l'utilisateur
 	*/
-	public function recup_indisponibilites() {
-		$retour = mysql_query('SELECT * FROM indisponibilite WHERE login = "'.$this->login.'"');
+	public function recup_indisponibilites($login) {
+		$retour = mysql_query('SELECT * FROM indisponibilite WHERE login = "'.$login.'"');
 		$donnees = mysql_fetch_array($retour);
 		return $donnees;		
 	}
@@ -153,7 +153,7 @@ class prof
 			}		
 		}
 		mysql_query("UPDATE indisponibilite SET lundi = '" . $semaine[0] . "', mardi = '" . $semaine[1] . "', mercredi = '" . $semaine[2] . "', jeudi = '" . $semaine[3] . "', vendredi = '" . $semaine[4] . "' WHERE login = '".$this->login."'");
-		echo 'Disponibilités modifiées !';
+		echo '<p style="font-weight:bold;color:#26a200;">Disponibilités modifiées !</p>';
 	}
 	
 	
@@ -164,12 +164,12 @@ class prof
 	/*
 	* Ecritute du fichier contenant les souhaits des binômes afin de le transmettre au responsable des affectations : M.COLETTA
 	*/
-	public function creer_fichier_souhaits()
+	public function creer_fichier_souhaits($niveau)
 	{
-		$MonFichier = "../files/wishbin." . $_GET['niveau'] . ".txt"; // Chemin du fichier final
+		$MonFichier = "../files/wishbin." . $niveau . ".txt"; // Chemin du fichier final
 		$F = fopen($MonFichier,"w"); // On crée le fichier
 		$texte = "";
-		$sql = mysql_query("SELECT * FROM wish WHERE niveau= '" . $_GET['niveau'] . "'"); // on récupere tous les souhaits par niveau
+		$sql = mysql_query("SELECT * FROM wish WHERE niveau= '" . $niveau . "'"); // on récupere tous les souhaits par niveau
 		while ($data = mysql_fetch_array($sql))
 		{
 			$texte .= $data['id_bin'] . "," . $data['wish1'] . "," . $data['wish2'] . "," . $data['wish3'] . "," . $data['wish4'] . "," . $data['wish5'] . "\r\n"; // On crée ligne par ligne le fichier de souhaits
@@ -226,36 +226,36 @@ class prof
 	/*
 	* Ajout ou modification des informations d'un utilisateur dans la base de donnée (un éleve ou un prof)
 	*/
-	public function ajouter_utilisateur()
+	public function ajouter_utilisateur($mdp, $mdp2, $gen, $mode, $type, $nom, $prenom, $groupe, $login, $niveau, $loginold)
 	{
-		if ($_POST['mdp'] == $_POST['mdp2'] && $_POST['mdp'] != "")
+		if ($mdp == $mdp2 && $mdp != "")
 		{
-			$_POST['gen'] ? $champgenerique = 1 : $champgenerique = 0;
+			$gen ? $champgenerique = 1 : $champgenerique = 0;
 			
-			if ($_POST['mode'] == 'Ajouter')
+			if ($mode == 'Ajouter')
 			{
-				if ($_POST['type'] == "eleves") 
+				if ($type == "eleves") 
 				{
-					mysql_query("INSERT INTO " . $_POST['type'] . " VALUES('" . $_POST['nom'] . "','" . $_POST['prenom'] . "','" . $_POST['groupe'] . "','" . strtolower($_POST['login']) . "','" . md5($_POST['mdp']) . "','" . $champgenerique . "','" . $_POST['niveau'] . "')");
+					mysql_query("INSERT INTO " . $type . " VALUES('" . $nom . "','" . $prenom . "','" . $groupe . "','" . strtolower($login) . "','" . md5($mdp) . "','" . $champgenerique . "','" . $niveau . "')");
 				}
 				else
 				{					
-					mysql_query("INSERT INTO " . $_POST['type'] . " VALUES('" . $_POST['nom'] . "','" . $_POST['prenom'] . "','" . strtolower($_POST['login']) . "','" . md5($_POST['mdp']) . "','" . $champgenerique . "')");
+					mysql_query("INSERT INTO " . $type . " VALUES('" . $nom . "','" . $prenom . "','" . strtolower($login) . "','" . md5($mdp) . "','" . $champgenerique . "')");
 				}
 			}
-			else if ($_POST['mode'] == 'Modifier')
+			else if ($mode == 'Modifier')
 			{	
 		
-				if ($_POST['type'] == "eleves") 
+				if ($type == "eleves") 
 				{	
-					mysql_query("UPDATE " . $_POST['type'] . " SET nom='" . $_POST['nom'] . "',prenom='" . $_POST['prenom'] . "',groupe='" . $_POST['groupe'] . "',login='" . strtolower($_POST['login']) . "',pwd='" . md5($_POST['mdp']) . "',boolbin='" . $champgenerique . "',niveau='" . $_POST['niveau'] . "' WHERE login='" . $_POST['loginold'] . "'");
+					mysql_query("UPDATE " . $type . " SET nom='" . $nom . "',prenom='" . $prenom . "',groupe='" . $groupe . "',login='" . strtolower($login) . "',pwd='" . md5($mdp) . "',boolbin='" . $champgenerique . "',niveau='" . $niveau . "' WHERE login='" . $loginold . "'");
 				}
 				else
 				{						
-					mysql_query("UPDATE " . $_POST['type'] . " SET nom='" . $_POST['nom'] . "',prenom='" . $_POST['prenom'] . "',login='" . strtolower($_POST['login']) . "',pwd='" . md5($_POST['mdp']) . "',droit='" . $champgenerique . "' WHERE login='" . $_POST['loginold'] . "'");
+					mysql_query("UPDATE " . $type . " SET nom='" . $nom . "',prenom='" . $prenom . "',login='" . strtolower($login) . "',pwd='" . md5($mdp) . "',droit='" . $champgenerique . "' WHERE login='" . $loginold . "'");
 				}	
 			}			
-			echo '<script type="text/javascript"> windows.Location =?page=gestion_users&type=' . $_POST['type'] . '</script>';
+			echo '<script type="text/javascript"> windows.Location =?page=gestion_users&type=' . $type . '</script>';
 		}
 		else
 		{
@@ -289,28 +289,43 @@ class prof
 	* Effectue la modification des binomes
 	* Il faut donc remettre boolbin a 0 puis remettre a 1 pour les deux nouveaux membres
 	*/
-	public function	modifier_binome()
+	public function	modifier_binome($nom1, $nom2, $id)
 	{
-		$modif = mysql_query("SELECT nom1,nom2 FROM binome WHERE num='" . $_GET['id'] . "'");
+		$modif = mysql_query("SELECT nom1,nom2 FROM binome WHERE num='" . $id . "'");
 		$modif = mysql_fetch_assoc($modif);
 		mysql_query("UPDATE eleves SET boolbin='0' WHERE login='" . $modif['nom1'] . "' OR login='" . $modif['nom2'] . "'"); // mise à 0 des anciens noms
-		mysql_query("UPDATE binome SET nom1='" . $_POST['nom1'] . "', nom2='" . $_POST['nom2'] . "', valide='1'"); //modification du tuple
-		mysql_query("UPDATE eleves SET boolbin='1' WHERE login='" . $_POST['nom1'] . "' OR login='" . $_POST['nom2'] . "'"); // mise à 1 pour le nouveau binome
+		mysql_query("UPDATE binome SET nom1='" . $nom1 . "', nom2='" . $nom2 . "', valide='1' WHERE num='".$id."'"); //modification du tuple
+		mysql_query("UPDATE eleves SET boolbin='1' WHERE login='" . $nom1 . "' OR login='" . $nom2 . "'"); // mise à 1 pour le nouveau binome
 	}
 
 	/*
 	* Permet d'enregistrer le planning des dates pour chaque niveau
 	*/
-	public function enregistrer_date()
+	public function enregistrer_date($tab_m, $tab_h, $tab_mm, $tab_j, $tab_a, $annee, $niveau)
 	{
 		for ($i = 0 ; $i <= 9 ; $i++) // Pour chaque mois de l'année scolaire
 		{
-			$moi = $this->mois_en_chiffre($_POST['m' . $i], $mois); // On récupere le numéro du mois concerné
-			$dates[$i] = mktime($_POST['h' . $i], $_POST['mm' . $i], 0, $moi, $_POST['j' . $i], $_POST['a' . $i]); // On crée le TIMESTAMP de chaque date entrée
+			$mois = array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
+			$moi = $this->mois_en_chiffre($tab_m[$i], $mois); // On récupere le numéro du mois concerné
+			$dates[$i] = mktime($tab_h[$i], $tab_mm[$i], 0, $moi, $tab_j[$i], $tab_a[$i]); // On crée le TIMESTAMP de chaque date entrée
 		}
 		
-		$annee = $_POST['a1']; // On récupere l'année scolaire donnée
-		mysql_query("INSERT INTO date VALUES('" .$annee	. "','" . $dates[0] . "','" . $dates[1] . "','" . $dates[2] . "','" . $dates[3] . "','" . $dates[4] . "','" . $dates[5] . "','" . $dates[6] . "','" . $dates[7] . "','" . $dates[8] . "','" . $dates[9] . "','" . $_POST['niveau'] . "')");
+		mysql_query("INSERT INTO date VALUES('" .$annee	. "','" . $dates[0] . "','" . $dates[1] . "','" . $dates[2] . "','" . $dates[3] . "','" . $dates[4] . "','" . $dates[5] . "','" . $dates[6] . "','" . $dates[7] . "','" . $dates[8] . "','" . $dates[9] . "','" . $niveau . "')");
+	}	
+	
+	/*
+	* Permet de mettre a jour le planning des dates pour chaque niveau
+	*/
+	public function modifier_date($tab_m, $tab_h, $tab_mm, $tab_j, $tab_a, $annee, $niveau)
+	{
+		for ($i = 0 ; $i <= 9 ; $i++) // Pour chaque mois de l'année scolaire
+		{
+			$mois = array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
+			$moi = $this->mois_en_chiffre($tab_m[$i], $mois); // On récupere le numéro du mois concerné
+			$dates[$i] = mktime($tab_h[$i], $tab_mm[$i], 0, $moi, $tab_j[$i], $tab_a[$i]); // On crée le TIMESTAMP de chaque date entrée
+		}
+		
+		mysql_query("UPDATE date SET annee='" .$annee. "', construction_binome='" .$dates[0]. "', enregistrement_projet='" .$dates[1] . "', reunion_coor='" . $dates[2] . "', diffusion_sujet='" . $dates[3] . "', formulation_voeux='" . $dates[4] . "', affectation_sujet='" . $dates[5] . "', rapport_pre='" . $dates[6] . "', remise_rapport='" . $dates[7] . "', deb_soutenance='" . $dates[8] . "', fin_soutenance='" . $dates[9] . "' WHERE niveau='" . $niveau . "'") or die('Erreur lors de la MAJ : <br />'.mysql_error());
 	}	
 		
 	/*
@@ -397,13 +412,98 @@ class prof
 	*/
 	public function prof_disponibles_heure($jour, $heure) {
 		$profs_dispos = array();
+		$profs_indispos = array();
 		$retour = mysql_query('SELECT * FROM indisponibilite');
 		while($donnees = mysql_fetch_array($retour)) {
 			$indispos_prof = explode(";", $donnees[$jour]); // liste des heures ou le prof n'est pas la le jour demandé
 			if(!in_array($heure, $indispos_prof)) // si l'heure demandé ne fait pas partie de ses indisponibilités
 				$profs_dispos[] = $donnees['login']; // on l'ajoute a la liste des profs disponibles
+			
+			if(in_array($heure, $indispos_prof))
+				$profs_indispos[] = $donnees['login'];
 		}
+		
+		$ret = mysql_query('SELECT login FROM prof');
+		while($d = mysql_fetch_array($ret)) {
+			if(!in_array($d['login'], $profs_indispos) && !in_array($d['login'], $profs_dispos)) 
+				$profs_dispos[] = $d['login'];
+		}
+		sort($profs_dispos);
+		
 		return $profs_dispos;
+	}
+	
+	public function recup_dates_planning($niveau) {
+		$retour = mysql_query('SELECT * FROM date WHERE niveau ="'.$niveau.'"');
+		$donnees = mysql_fetch_array($retour);
+		
+		$valeurs = array();
+		
+		if(mysql_num_rows($retour) > 0) {
+			$valeurs[0] = $donnees['construction_binome'];
+			$valeurs[1] = $donnees['enregistrement_projet'];
+			$valeurs[2] = $donnees['reunion_coor'];
+			$valeurs[3] = $donnees['diffusion_sujet'];
+			$valeurs[4] = $donnees['formulation_voeux'];	
+			$valeurs[5] = $donnees['affectation_sujet'];
+			$valeurs[6] = $donnees['rapport_pre'];
+			$valeurs[7] = $donnees['remise_rapport'];
+			$valeurs[8] = $donnees['deb_soutenance'];
+			$valeurs[9] = $donnees['fin_soutenance'];
+			
+			$dates = array();
+			
+			for($i=0; $i<10; $i++) {
+				$dates[$i][0] = date('d', $valeurs[$i]);
+				$dates[$i][1] = date('m', $valeurs[$i]);
+				$dates[$i][2] = date('Y', $valeurs[$i]);
+				$dates[$i][3] = date('H', $valeurs[$i]);
+				$dates[$i][4] = date('i', $valeurs[$i]);
+			}
+		}
+		return $dates;
+	}
+	
+	public function RAZ() {
+		mysql_query('DELETE FROM binome');
+		mysql_query('DELETE FROM eleves');
+		mysql_query('DELETE FROM date');
+		mysql_query('DELETE FROM indisponibilite');
+		mysql_query('DELETE FROM planning');
+		mysql_query('DELETE FROM soutenance');
+	}
+	
+	public function generer_compteur_csv() {
+		$fichier = fopen('../files/compteur_projet.csv', 'w');
+		
+		fputcsv($fichier, array("Nom", "Nombre de projet(s)", "Détail", "Nombre de soutenances"));
+		
+		$sql = mysql_query("SELECT login,nom,prenom FROM prof");
+		while ($donnees = mysql_fetch_array($sql))
+		{
+	
+			$compteurtot = mysql_query("SELECT count(id_proj) FROM projets WHERE (tuteur1 ='" . $donnees['login'] . "' OR tuteur2 = '" . $donnees['login'] . "')"); // nombre de projet total où est le tuteur
+			$compteurtot = mysql_fetch_assoc($compteurtot);	
+			$compteurtot = $compteurtot['count(id_proj)'];
+	
+			$compteurprojet = mysql_query("SELECT count(id_proj) FROM projets WHERE (tuteur1 ='" . $donnees['login'] . "' AND tuteur2 = '')"); // nombre de projet (et non demi projet)
+			$compteurprojet = mysql_fetch_assoc($compteurprojet);
+			$compteurprojet = $compteurprojet['count(id_proj)'];	
+			
+			$compteurdemiprojet = $compteurtot - $compteurprojet; // la différence des projets totaux et les projets complet	
+			$nbdemiprojet = $compteurdemiprojet; // nombre de demi projet
+			$compteurdemiprojet =  $compteurdemiprojet * 0.5;
+			$compteurtot = $compteurdemiprojet + $compteurprojet;
+			
+			$ret = mysql_query("SELECT count(s.id_bin) FROM binome b,soutenance s,projets p WHERE (s.id_bin = b.num AND b.id_proj = p.id_proj) AND (p.tuteur1 ='" . $donnees['login'] . "' OR p.tuteur2 ='" . $donnees['login'] . "' OR s.tuteur_comp='" . $donnees['login'] . "')");
+			$nbsout = mysql_fetch_assoc($ret);
+			fputcsv($fichier, array(
+			$donnees['prenom'].' '.$donnees['nom'],
+			$compteurtot,
+			$compteurprojet.' projet(s) et '.$nbdemiprojet.' demi-projet(s))',
+			$nbsout['count(s.id_bin)']));
+		}
+		fclose($fichier);
 	}
 	
 }

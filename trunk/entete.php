@@ -10,7 +10,8 @@
 		'liste_projets' => 'liste_proj.php',		  //all		
 		'ajouter_indisponibilite' => 'indisponibilite.php', //prof
 		'affiche_date' => 'affiche_date.php',		//all
-		'affiche_soutenance' => 'planning_soutenance.php'
+		'affiche_soutenance' => 'planning_soutenance.php',
+		'description' => 'desc_projet.php'
 		);		
 		
 		session_start();

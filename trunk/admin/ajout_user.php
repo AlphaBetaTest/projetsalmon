@@ -1,6 +1,6 @@
 <?php 
 $objet = unserialize($_SESSION['objet']);
-if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
+if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
 	
 	if (isset($_GET['mode']) && $_GET['mode'] == "Modifier")
@@ -12,7 +12,8 @@ if ($_SESSION['objet'] != "" && $objet->get_droit() == 1)
 	// traitement formulaire
 	if ($_POST['nom'] != "" && $_POST['prenom'] != "" && $_POST['mdp'] != "" && $_POST['mdp2'] != "" && $_POST['login'] != "")
 	{	
-		$objet->ajouter_utilisateur();			
+		$objet->ajouter_utilisateur($_POST['mdp'], $_POST['mdp2'], $_POST['gen'], $_POST['mode'], $_POST['type'], $_POST['nom'], $_POST['prenom'], $_POST['groupe'], $_POST['login'], $_POST['niveau'], $_POST['loginold']);	
+		
 		echo 'Utilisateur ajouté ou modifié ! Vous allez etre redirigé.
 		<script type="text/javascript">redirection("gestion_utilisateur");</script>';		
 	}

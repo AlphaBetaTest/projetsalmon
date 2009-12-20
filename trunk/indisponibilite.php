@@ -10,7 +10,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 	echo '<p>- Pour sélectionner vos indisponibilités, il vous suffit de cliquer dans la/les case(s) désirée(s)<br/>
 	- Pour en supprimer une, cliquez sur une case déjà sélectionnée ou pressez une touche.</p>';
 	
-	$indispos = $objet->recup_indisponibilites(); // on vérifie si les indisponibilités existent ou non
+	$indispos = $objet->recup_indisponibilites($objet->info_login()); // on vérifie si les indisponibilités existent ou non
 	
 	if (isset($_POST['exist']))
 	{
@@ -29,7 +29,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 		  <th>Jeudi</th>
 		  <th>Vendredi</th>';
 	
-	$indispos = $objet->recup_indisponibilites(); // on récupere les indisponibilités de l'utilisateur si celui ci les a déja rentré
+	$indispos = $objet->recup_indisponibilites($objet->info_login()); // on récupere les indisponibilités de l'utilisateur si celui ci les a déja rentré
 	
 	$heures_memorisee_lundi = explode(";", $indispos['lundi']);
 	$heures_memorisee_mardi = explode(";", $indispos['mardi']);

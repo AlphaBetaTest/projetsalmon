@@ -18,7 +18,7 @@ if (isset($_SESSION['objet']))
 }
 else
 {
-	echo '<p style="font-weight:bold;color:#FF0000;">Vous n\'etes pas identifié. Redirection dans quelques secondes.<p/>
+	echo '<p class="warning">Vous n\'etes pas identifié. Redirection dans quelques secondes.<p/>
 			<script type="text/javascript">redirection("login");</script>'; 	  
 }
 ?>

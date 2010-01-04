@@ -1,0 +1,3 @@
+﻿
+Binome_18  affecte au projet_11  Projet_11  "reservation de salles via l'intranet du departement informatique" capa= 1  Garcia  Delperdange
+Binome_19  affecte au projet_8  Projet_8  "Logiciel de jeu utilisant un algorithme du Min-Max" capa= 3  Nouguier

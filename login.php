@@ -2,10 +2,10 @@
 
 /* Gestion des messages d'information */
 switch ($_GET['etat'])  {
-	case "1" : echo '<p style="font-weight:bold;color:#FF0000;">Mauvais nom d\'utilisateur et/ou mot de passe.<p/>'; 
+	case "1" : echo '<p class="warning">Mauvais nom d\'utilisateur et/ou mot de passe.<p/>'; 
 	break;
 	
-	case "2" : echo '<p style="font-weight:bold;color:#26a200;">Modification du mot de passe effectuée avec succes.<p/>'; 
+	case "2" : echo '<p class="granted">Modification du mot de passe effectuée avec succes.<p/>'; 
 	break;
 	
 	default :
@@ -82,7 +82,7 @@ function logout() {
 
 	$_SESSION = array();
 	session_destroy();
-	echo '<p style="font-weight:bold;color:#FF0000;">Vous avez été déconnecté. Redirection dans quelques secondes.<p/>
+	echo '<p class="warning">Vous avez été déconnecté. Redirection dans quelques secondes.<p/>
 			<script type="text/javascript">redirection("login");</script>';
 }
 

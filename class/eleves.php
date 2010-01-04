@@ -120,7 +120,7 @@ class eleves
 			
 			if ($value != "") // Si on a été choisi
 			{
-				echo '<p style="font-weight:bold;color:#FF0000;">'.ucfirst(strtolower($r['prenom'])) . ' ' . ucfirst(strtolower($r['nom'])) . ' veut être votre partenaire !</p>';
+				echo '<p class="warning">'.ucfirst(strtolower($r['prenom'])) . ' ' . ucfirst(strtolower($r['nom'])) . ' veut être votre partenaire !</p>';
 			}
 		}
 	}

@@ -120,7 +120,15 @@
 					<li class="normal"><a href="?page=compte_projet_enseignant">Compteur projet/soutenance</a></li>
 					<li class="normal"><a href="?page=gestion_utilisateur">Gestion des utilisateurs</a></li>
 					<li class="normal"><a href="?page=gestion_binome">Gestion des binomes</a></li>
-					<li class="normal"><a href="?page=gestion_soutenance">Gestion des soutenances</a></li>
+					<li class="normal"><a href="?page=gestion_soutenance">Liste des soutenances</a></li>
+					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="#">Ajouter une soutenance</a>
+						<ul>
+							<li class="normal"><a href="?page=ajouter_soutenance&niveau=A2">Ann&eacute;e 2</a></li>
+							<li class="normal"><a href="?page=ajouter_soutenance&niveau=LP">Licence professionnelle</a></li>
+							<li class="normal"><a href="?page=ajouter_soutenance&niveau=AS">Ann&eacute;e sp&eacute;ciale</a></li>
+			
+						</ul>
+					</li>
 					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="#">Enregistrer planning date</a>
 						<ul>
 							<li class="normal"><a href="index.php?page=enregistrer_date&niveau=A2">Ann&eacute;e 2</a></li>

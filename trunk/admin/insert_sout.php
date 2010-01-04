@@ -14,6 +14,13 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	
 	echo '<p>Vous pouvez sélectionner une heure pour ajouter une soutenance en cliquant sur une des cases du calendrier.<br /> Les informations complémentaires sur la soutenance vous seront demandées apres.</p>';
 	
+	echo '<p><b>Niveau :</b> '.$_GET['niveau'].'</p>';
+	
+	$ret = mysql_query('SELECT * FROM date WHERE niveau = "'.$_GET['niveau'].'"');
+	$d = mysql_fetch_array($ret);
+	
+	echo '<p><b>Semaine du '.date('d/m/Y', $d['deb_soutenance']).' au '.date('d/m/Y', $d['fin_soutenance']).'</b></p>';
+	
 	echo '<p>
 		  <table>
 		  <th>Horaire</th>
@@ -32,27 +39,27 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 		echo '<th>' . $h . 'h-' . ($h + 1) . 'h</th>';
 		$tab = $objet->prof_disponibles_heure("lundi", $i);
 		foreach($tab as $value) $profs.=$value.' / ';
-		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		echo '<td><a href="?page=edition_soutenance&jour=lundi&heure='.$i.'&niveau='.$_GET['niveau'].'" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
 		$profs ="";
 		
 		$tab = $objet->prof_disponibles_heure("mardi", $i);
 		foreach($tab as $value) $profs.=$value.' / ';
-		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		echo '<td><a href="?page=edition_soutenance&jour=mardi&heure='.$i.'&niveau='.$_GET['niveau'].'" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
 		$profs ="";
 		
 		$tab = $objet->prof_disponibles_heure("mercredi", $i);
 		foreach($tab as $value) $profs.=$value.' / ';
-		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		echo '<td><a href="?page=edition_soutenance&jour=mercredi&heure='.$i.'&niveau='.$_GET['niveau'].'" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
 		$profs ="";
 		
 		$tab = $objet->prof_disponibles_heure("jeudi", $i);
 		foreach($tab as $value) $profs.=$value.' / ';
-		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		echo '<td><a href="?page=edition_soutenance&jour=jeudi&heure='.$i.'&niveau='.$_GET['niveau'].'" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
 		$profs ="";
 		
 		$tab = $objet->prof_disponibles_heure("vendredi", $i);
 		foreach($tab as $value) $profs.=$value.' / ';
-		echo '<td><a href="" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
+		echo '<td><a href="?page=edition_soutenance&jour=vendredi&heure='.$i.'&niveau='.$_GET['niveau'].'" class="dispo"><input type="text" size="10" maxlength="0" /><span>Profs disponibles : <br /><br />'.$profs.'</span></a></td>';
 		$profs ="";
 		echo ' </tr>';
 	}	

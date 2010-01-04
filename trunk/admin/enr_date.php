@@ -38,7 +38,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 			}
 		}
 		else { 
-			echo'<p style="font-weight:bold;color:#FF0000;">Vous devez remplir tous les champs !</p>';		
+			echo'<p class="warning">Vous devez remplir tous les champs !</p>';		
 		}		
 	}
 	

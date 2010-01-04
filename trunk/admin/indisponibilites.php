@@ -3,6 +3,7 @@ $objet = unserialize($_SESSION['objet']);
 
 if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
+	echo '<h1>Indisponibilités de : '.ucfirst($_GET['log']).'</h1>';
 	
 	if (isset($_GET))
 	{

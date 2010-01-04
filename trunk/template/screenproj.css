@@ -6,6 +6,10 @@ em {font-size:12pt;}
 
 img { border:0;}	
 
+/**********/
+/* BOITES */
+/**********/
+
 p.info {
 text-align:left;
 margin-left:40%;
@@ -85,7 +89,33 @@ color:#005679;
 padding: 5px;
 }
 
+span.dispo {
+width:400px;
+display: block;
+background:white;
+border:1px solid black;
+border-left:3px solid green;
+text-align: left;
+color:#005679;
+padding: 5px;
+float:left;
+margin-left:20px;
+}
 
+/*************/
+/*FIN BOITES */
+/*************/
+
+/* Message d'erreur */
+p.warning {
+font-weight:bold;
+color:#FF0000;
+}
+
+p.granted {
+font-weight:bold;
+color:#26a200;
+}
 
 /* Page ajout de projet */
 table.addproj

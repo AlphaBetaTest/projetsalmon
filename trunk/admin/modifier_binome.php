@@ -8,7 +8,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	if (isset($_POST['modif']) && $_POST['modif'] != "")
 	{
 		$objet->modifier_binome($_POST['nom1'], $_POST['nom2'], $_GET['id']);
-		echo '<p style="font-weight:bold;color:#26a200;">Binôme modifié !</p>';
+		echo '<p class="granted">Binôme modifié !</p>';
 	}
 	
 	$binome = mysql_query("SELECT * FROM binome WHERE num='" . $_GET['id'] . "'");

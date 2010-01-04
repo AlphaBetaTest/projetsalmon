@@ -96,10 +96,10 @@ class prof
 		   // dois-je protéger les variables ? les profs vont-ils s'amuser à mettre du html dans les blocs ?
 		   if( $remarque == "")	$remarque = "Aucune";	
 		   
-		   if(empty($niveau)) die ('Il n\'y a pas de niveau !<script type="text/javascript">redirection("enregistrer_projet");</script>');
+		   if(empty($niveau)) die ('<p class="warning">Il n\'y a pas de niveau !</p><script type="text/javascript">redirection("enregistrer_projet");</script>');
 
-		   mysql_query("INSERT INTO projets VALUES('', '" . $this->login . "','" . addslashes($tut2) . "' , '" . addslashes($titre) . "', '" . addslashes($nb_wish) . "', '" . addslashes($nb_possible) . "', '" . addslashes($description) . "', '" . addslashes($qualif) . "', '" . addslashes($domaine) . "', '" . addslashes($materiel) . "', '" . addslashes($remarque) . "','" . addslashes($niveau) . "', '".addslashes($groupe)."')") or die('Probleme lors de l\'ajout d\'un sujet : '.mysql_error());
-			echo '<p style="font-weight:bold;color:#26a200;">Projet ajouté !</p>';
+		   mysql_query("INSERT INTO projets VALUES('', '" . $this->login . "','" . addslashes($tut2) . "' , '" . addslashes($titre) . "', '" . addslashes($nb_wish) . "', '" . addslashes($nb_possible) . "', '" . addslashes($description) . "', '" . addslashes($qualif) . "', '" . addslashes($domaine) . "', '" . addslashes($materiel) . "', '" . addslashes($remarque) . "','" . addslashes($niveau) . "', '".addslashes($groupe)."')") or die('<p class="warning">Probleme lors de l\'ajout d\'un sujet : '.mysql_error().'</p>');
+			echo '<p class="granted">Projet ajouté !</p>';
 	}
 	
 	/*
@@ -122,7 +122,7 @@ class prof
 		}
 		mysql_query("INSERT INTO indisponibilite VALUES ('" . $this->login . "','" . $semaine[0] . "','" . $semaine[1] . "','" . $semaine[2] . "','" . $semaine[3] . "','" . $semaine[4] . "')");
 		
-		echo '<p style="font-weight:bold;color:#26a200;">Disponibilités ajoutés</p>';
+		echo '<p class="granted">Disponibilités ajoutés</p>';
 	}
 	
 	/*
@@ -153,7 +153,7 @@ class prof
 			}		
 		}
 		mysql_query("UPDATE indisponibilite SET lundi = '" . $semaine[0] . "', mardi = '" . $semaine[1] . "', mercredi = '" . $semaine[2] . "', jeudi = '" . $semaine[3] . "', vendredi = '" . $semaine[4] . "' WHERE login = '".$this->login."'");
-		echo '<p style="font-weight:bold;color:#26a200;">Disponibilités modifiées !</p>';
+		echo '<p class="granted">Disponibilités modifiées !</p>';
 	}
 	
 	
@@ -179,7 +179,7 @@ class prof
 		fwrite($F,$texte);
 		fclose($F);
 
-		echo '<a href="' . $MonFichier . '">Adresse du fichier texte pour les voeux formulé par les étudiants</a>';
+		echo '<p><a href="' . $MonFichier . '">Adresse du fichier texte pour les voeux formulé par les étudiants</a></p>';
 	}
 
 	/*
@@ -193,8 +193,8 @@ class prof
 			$nomfichier = "fichierBD_".$niveau.".csv"; // On donne un nom au fichier qui a été uploadé
 			$chemin = '../files/'. $nomfichier; // On définit ou il sera placé
 			move_uploaded_file($fichier['tmp_name'], $chemin); // On déplace le fichier dans le dossier "files" du serveur
-			echo "Envoie effectué ! <br/>
-			Traitement du fichier en cours...<br/><br />";
+			echo "<p class=\"granted\">Envoie effectué ! <br/>
+			Traitement du fichier en cours...</p>";
 		
 			$requete = "INSERT INTO eleves VALUES ";
 			$f = fopen('../files/fichierBD_'.$niveau.'.csv', 'r'); // On ouvre le fichier uploadé
@@ -209,17 +209,17 @@ class prof
 			
 			if(preg_match("#Duplicate entry#", mysql_error())) // On vérifie s'il y a un doublon dans les logins
 			{
-				echo 'Un login équivalent a été trouvé dans la base de données, veuillez <a href="suppr_alluser.php">vider la table</a> ou <a href="suppr_user.php">supprimer un utilisateur</a>. Vérifiez qu\'il n\'y a pas un login identique pour deux éleves dans le fichier généré par le convertisseur.<br />Erreur MYSQL : '.mysql_error();
+				echo '<p class="warning">Un login équivalent a été trouvé dans la base de données, veuillez <a href="suppr_alluser.php">vider la table</a> ou <a href="suppr_user.php">supprimer un utilisateur</a>. Vérifiez qu\'il n\'y a pas un login identique pour deux éleves dans le fichier généré par le convertisseur.<br />Erreur MYSQL : '.mysql_error().'</p>';
 			}
 			else
 			{
 				echo mysql_error();
-				echo '<p style="font-weight:bold;color:#26a200;">Envoi correctement effectué !</p>';
+				echo '<p class="granted">Envoi correctement effectué !</p>';
 			}			
 		}
 		else
 		{
-			echo 'Extension incorrecte, veuillez rééssayer';
+			echo '<p class="warning">Extension incorrecte, veuillez rééssayer</p>';
 		}
 	}
 
@@ -259,7 +259,7 @@ class prof
 		}
 		else
 		{
-		echo 'Erreur les deux mots de passes ne sont pas identiques';
+		echo '<p class="warning">Erreur les deux mots de passes ne sont pas identiques</p>';
 		}
 	
 	}
@@ -325,7 +325,7 @@ class prof
 			$dates[$i] = mktime($tab_h[$i], $tab_mm[$i], 0, $moi, $tab_j[$i], $tab_a[$i]); // On crée le TIMESTAMP de chaque date entrée
 		}
 		
-		mysql_query("UPDATE date SET annee='" .$annee. "', construction_binome='" .$dates[0]. "', enregistrement_projet='" .$dates[1] . "', reunion_coor='" . $dates[2] . "', diffusion_sujet='" . $dates[3] . "', formulation_voeux='" . $dates[4] . "', affectation_sujet='" . $dates[5] . "', rapport_pre='" . $dates[6] . "', remise_rapport='" . $dates[7] . "', deb_soutenance='" . $dates[8] . "', fin_soutenance='" . $dates[9] . "' WHERE niveau='" . $niveau . "'") or die('Erreur lors de la MAJ : <br />'.mysql_error());
+		mysql_query("UPDATE date SET annee='" .$annee. "', construction_binome='" .$dates[0]. "', enregistrement_projet='" .$dates[1] . "', reunion_coor='" . $dates[2] . "', diffusion_sujet='" . $dates[3] . "', formulation_voeux='" . $dates[4] . "', affectation_sujet='" . $dates[5] . "', rapport_pre='" . $dates[6] . "', remise_rapport='" . $dates[7] . "', deb_soutenance='" . $dates[8] . "', fin_soutenance='" . $dates[9] . "' WHERE niveau='" . $niveau . "'") or die('<p class="warning">Erreur lors de la MAJ : </p>'.mysql_error());
 	}	
 		
 	/*
@@ -355,27 +355,23 @@ class prof
 	/*
 	* Permet d'ajouter une soutenance
 	*/
-	public function ajouter_soutenance()
+	public function ajouter_soutenance($num_bin, $niveau, $jour, $heure, $salle, $jury, $modif)
 	{
-		$exist = mysql_query("SELECT id_bin FROM soutenance WHERE id_bin='" . $out . "'");
-		$exist = mysql_fetch_assoc($exist);		
-		if ($exist['id_bin'] == "")
+		$exist = mysql_query("SELECT id_bin FROM soutenance WHERE id_bin='" . $num_bin . "'");
+		if (mysql_num_rows($exist) == 0)
 		{
-			$r = mysql_query("SELECT deb_soutenance FROM date ORDER BY annee DESC");
+			$r = mysql_query("SELECT deb_soutenance FROM date WHERE niveau = '".$niveau."'");
 			$date = mysql_fetch_assoc($r);
-			if($other) // cas date en dehors de la liste
-				$jour_soutenance = mktime($_POST['h'],0,0,$_POST['m'],$_POST['j'],date("Y",$date['deb_soutenance']));
-			else			
-				$jour_soutenance = mktime($_POST['h'],0,0,date("m",$date['deb_soutenance']),$_POST['jours'],date("Y",$date['deb_soutenance']));		
 			
-			if (!isset($_GET['bin']))							
-				mysql_query("INSERT INTO soutenance VALUES ('" . $_POST['bin'] . "','" . $jour_soutenance . "','" . $_POST['salle'] . "','" . $_POST['jure'] . "')");					
+			$jour_soutenance = mktime($heure+7, 0, 0, date("m", $date['deb_soutenance']), date("d", $date['deb_soutenance'])+$jour, date("Y", $date['deb_soutenance']));
+			
+			if (!$modif)							
+				mysql_query("INSERT INTO soutenance VALUES ('" . $num_bin . "','" . $jour_soutenance . "','" . $salle . "','" . $jury . "')");			
 			else			
-			mysql_query("UPDATE soutenance SET id_bin='" . $_POST['bin'] . "', date='" . $jour_soutenance . "', salle='" . $_POST['salle'] . "',tuteur_comp='" . $_POST['jure'] . "' WHERE id_bin='" . $_GET['bin'] . "'");
+			mysql_query("UPDATE soutenance SET date='" . $jour_soutenance . "', salle='" . $salle . "',tuteur_comp='" . $jury . "' WHERE id_bin='" . $num_bin . "'");
 		}
 		else
 			echo 'Erreur ! La soutenance pour ce bin&ocirc;me a d&eacute;j&agrave; &eacute;t&eacute;.';
-
 	}
 
 	/*
@@ -389,7 +385,7 @@ class prof
 			$nomfichier = "wishaffect.txt";
 			$chemin = '../files/'. $nomfichier;
 			move_uploaded_file($fichier['tmp_name'], $chemin);
-			echo "Envoie effectué ! \n";
+			echo "<p class=\"granted\">Envoie effectué ! </p>";
 		}	
 	
 		$MonFichier = "../files/wishaffect.txt";
@@ -504,7 +500,6 @@ class prof
 			$nbsout['count(s.id_bin)']));
 		}
 		fclose($fichier);
-	}
-	
+	}	
 }
 ?>

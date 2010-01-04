@@ -22,7 +22,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 		$objet->enregistrer_projet($_POST['nomtuteur2'],$_POST['prenomtuteur2'], $_POST['titre'], $_POST['wish'], $_POST['possible'], $qualif, $_POST['rem'], $_POST['description'], $_POST['domaine'], $_POST['matos'], $niveau, $groupe); // s'occuper de niveau quand on aura adapté pour LP et AS.
 	}
 	else {
-		echo '<p style="font-weight:bold;color:#FF0000;">Veuillez remplir correctement tous les champs !</p>';	
+		echo '<p class="warning">Veuillez remplir correctement tous les champs !</p>';	
 	}
 	
 	$nomcomplet = $objet->name();

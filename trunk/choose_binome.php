@@ -52,14 +52,14 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 				}
 					//echo '<br/>Ton choix a &eacute;t&eacute; pris en compte';
 					$_SESSION['objet'] = serialize($objet); // Pour sauvegarder la valeur modifiée ou non de boolbin
-					echo '<p style="font-weight:bold;color:#26a200;">Choix pris en compte !</p>';
+					echo '<p class="granted">Choix pris en compte !</p>';
 			}
 			
 			if($objet->get_boolbin(0)) 
 			{
 				$objet->partenaire(); // Y'a t-il quelqu'un qui nous a choisit ?
 				
-				echo 'Vous souhaitez créer un :<br /><br />';
+				echo '<p>Vous souhaitez créer un :<br /><br />';
 				
 				echo '<form action="?page=choisir_binome" method="post" name="formulaire">';
 				echo '<input type="radio" name="type" value="monome" />Mon&ocirc;me<br />';
@@ -79,18 +79,18 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 				} 
 				echo '</select><br/><br/>';			
 				echo '<input type="submit" value="Effectuer mon choix" />';
-				echo '</form> ';
+				echo '</form></p>';
 			}
 						
 		}	
 		else
 		{
 			if ($objet->get_boolbin(0) && !$objet->datecorrecte("construction_binome"))			 
-				echo '<p style="font-weight:bold;color:#FF0000;">Date d&eacute;pass&eacute;e, tu ne peux plus cr&eacute;er ou modifier ton bin&ocirc;me ! <br/>
+				echo '<p class="warning">Date d&eacute;pass&eacute;e, tu ne peux plus cr&eacute;er ou modifier ton bin&ocirc;me ! <br/>
 									Contacte l\'administrateur pour plus d\'informations.</p>';
 			
 			else			
-				echo '<p style="font-weight:bold;color:#FF0000;">Tu as d&eacute;j&agrave; fait ton choix et il a &eacute;t&eacute; valid&eacute; ! </p>';
+				echo '<p class="warning">Tu as d&eacute;j&agrave; fait ton choix et il a &eacute;t&eacute; valid&eacute; ! </p>';
 		}
 }
 else

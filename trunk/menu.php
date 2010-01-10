@@ -106,7 +106,7 @@
 			if ($objet->get_droit(1))
 			{
 				echo '<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);">
-					<a href="../index.php">Admin Gestion des projets</a>
+					<a href="index.php">Admin Gestion des projets</a>
 				<ul>
 					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="?page=creer_fichier_voeux">Cr&eacute;er le fichier de voeux</a>
 					<ul>
@@ -118,7 +118,15 @@
 					<li class="normal"><a href="admin/index.php?page=compte_projet_enseignant">Compteur projet/soutenance</a></li>
 					<li class="normal"><a href="admin/index.php?page=gestion_utilisateur">Gestion des utilisateurs</a></li>
 					<li class="normal"><a href="admin/index.php?page=gestion_binome">Gestion des binomes</a></li>
-					<li class="normal"><a href="admin/index.php?page=gestion_soutenance">Gestion des soutenances</a></li>
+					<li class="normal"><a href="admin/index.php?page=gestion_soutenance">Liste des soutenances</a></li>
+					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="#">Ajouter une soutenance</a>
+						<ul>
+							<li class="normal"><a href="admin/index.php?page=ajouter_soutenance&niveau=A2">Ann&eacute;e 2</a></li>
+							<li class="normal"><a href="admin/index.php?page=ajouter_soutenance&niveau=LP">Licence professionnelle</a></li>
+							<li class="normal"><a href="admin/index.php?page=ajouter_soutenance&niveau=AS">Ann&eacute;e sp&eacute;ciale</a></li>
+			
+						</ul>
+					</li>
 					<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);"><a href="#">Enregistrer planning date</a>
 						<ul>
 							<li class="normal"><a href="admin/index.php?page=enregistrer_date&niveau=A2">Ann&eacute;e 2</a></li>
@@ -126,7 +134,8 @@
 							<li class="normal"><a href="admin/index.php?page=enregistrer_date&niveau=AS">Ann&eacute;e sp&eacute;ciale</a></li>
 			
 						</ul>
-					</li>					
+					</li>
+					<li class="normal"><a href="?page=raz">Remette à zéro</a></li>
 			</ul></li>';
 			}				
 		}

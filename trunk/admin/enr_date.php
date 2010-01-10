@@ -74,11 +74,15 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 					$selec = "";
 				echo '<option '.$selec.'>' . ucfirst($mois[$j]) . '</option>';
 			}
-		
+			echo '</select>';
+			
+			$annee1_selec = "";
+			$annee2_selec = "";
+			if($dates_enr[$i][2] == $annee) $annee1_selec = 'selected="selected"'; else $annee2_selec = 'selected="selected"'; 
 		echo '</select>&nbsp; 
 			<select name="a' . $i . '">
-				<option>' . $annee . '</option>
-				<option>' . ($annee + 1) . '</option>
+				<option '.$annee1_selec.'>' . $annee . '</option>
+				<option '.$annee2_selec.'>' . ($annee + 1) . '</option>
 			</select>&nbsp à &nbsp;
 				<input type="text" size="2" maxlength="2" name="h' . $i . '" value="'.$dates_enr[$i][3].'" />&nbsp; h&nbsp; 
 				<input type="text" size="2" maxlength="2" name="mm' . $i . '" value="'.$dates_enr[$i][4].'" /> &nbsp; &nbsp; &nbsp;

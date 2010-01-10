@@ -136,7 +136,8 @@
 							<li class="normal"><a href="index.php?page=enregistrer_date&niveau=AS">Ann&eacute;e sp&eacute;ciale</a></li>
 			
 						</ul>
-					</li>					
+					</li>
+					<li class="normal"><a href="?page=raz">Remette à zéro</a></li>					
 			</ul></li>';
 			}			
 		}

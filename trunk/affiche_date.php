@@ -47,6 +47,11 @@ else
 		<tr>
 			<td>Soutenances de projets</td><td> du ' . strftime("%A %d %B",$date['deb_soutenance']) . strftime(" au %A %d %B %Y",$date['fin_soutenance']) . '</td>
 		</tr>';
+		
+		if($_GET['niveau'] == "A2") echo '<tr>
+			<td>Soutenances éleves partant a l\'étranger</td><td>' . strftime("%A %d %B %Y à %Hh%M",$date['soutenance_etranger']).'</td>
+		</tr>';
+		
 	}
 	else
 	{

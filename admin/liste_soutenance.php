@@ -19,7 +19,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	<th class="border_cellule" colspan="2">Action</th>';
 	
 	$ret = mysql_query(
-						"SELECT s.id_bin,s.date,s.salle,p.tuteur1,p.tuteur2,s.tuteur_comp 
+						"SELECT s.id_bin,s.date,s.salle,p.tuteur1,p.tuteur2,s.tuteur_comp, b.niveau
 						FROM binome b,soutenance s,projets p 
 						WHERE s.id_bin = b.num AND b.id_proj = p.id_proj");	
 	while ($soutenance = mysql_fetch_array($ret))
@@ -37,7 +37,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 		}	
 		echo '</td>
 		<td class="border_cellule">' . ucfirst($soutenance['tuteur_comp']) . '</td>
-		<td class="border_cellule"><a href="?page=ajouter_soutenance&bin=' . $soutenance['id_bin'] . '"><img src="../images/b_edit.png" alt="Modifier" title="Modifier" /></a></td>
+		<td class="border_cellule"><a href="?page=edition_soutenance&bin=' . $soutenance['id_bin'] . '&niveau='.$soutenance['niveau'].'&jour='.date("d", $soutenance['date']).'&heure='.(date("G", $soutenance['date'])-7).'"><img src="../images/b_edit.png" alt="Modifier" title="Modifier" /></a></td>
 		<td class="border_cellule"><a href="?page=gestion_soutenance&id=' . $soutenance['id_bin'] . '"><img src="../images/b_drop.png" alt="Supprimer" title="Supprimer" /></a></td>
 		</tr>';
 		if ($soutenance['tuteur_comp'] != "") $cptprof++;

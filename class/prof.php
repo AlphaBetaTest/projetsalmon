@@ -357,21 +357,28 @@ class prof
 	*/
 	public function ajouter_soutenance($num_bin, $niveau, $jour, $heure, $salle, $jury, $modif)
 	{
-		$exist = mysql_query("SELECT id_bin FROM soutenance WHERE id_bin='" . $num_bin . "'");
-		if (mysql_num_rows($exist) == 0)
-		{
 			$r = mysql_query("SELECT deb_soutenance FROM date WHERE niveau = '".$niveau."'");
 			$date = mysql_fetch_assoc($r);
+
+			switch($jour) {
+				case "lundi" : $valeur_j = 1;
+				case "mardi" : $valeur_j = 2;
+				case "mercredi" : $valeur_j = 3;
+				case "jeudi" : $valeur_j = 4;
+				case "vendredi" : $valeur_j = 5;
+				default : $valeur_j = 0;
+			}
 			
-			$jour_soutenance = mktime($heure+7, 0, 0, date("m", $date['deb_soutenance']), date("d", $date['deb_soutenance'])+$jour, date("Y", $date['deb_soutenance']));
-			
-			if (!$modif)							
-				mysql_query("INSERT INTO soutenance VALUES ('" . $num_bin . "','" . $jour_soutenance . "','" . $salle . "','" . $jury . "')");			
-			else			
-			mysql_query("UPDATE soutenance SET date='" . $jour_soutenance . "', salle='" . $salle . "',tuteur_comp='" . $jury . "' WHERE id_bin='" . $num_bin . "'");
-		}
-		else
-			echo 'Erreur ! La soutenance pour ce bin&ocirc;me a d&eacute;j&agrave; &eacute;t&eacute;.';
+			$jour_soutenance = mktime($heure+7, 0, 0, date("m", $date['deb_soutenance']), date("d", $date['deb_soutenance'])+$valeur_j, date("Y", $date['deb_soutenance']));
+
+			if (!$modif) {
+				mysql_query("INSERT INTO soutenance VALUES ('" . $num_bin . "','" . $jour_soutenance . "','" . $salle . "','" . $jury . "')");
+				echo '<p class="granted">Soutenance ajoutée !</p>';
+			}
+			else {
+				mysql_query("UPDATE soutenance SET date='" . $jour_soutenance . "', salle='" . $salle . "', tuteur_comp='" . $jury . "' WHERE id_bin='" . $num_bin . "'") or die('Pas de MAJ');
+				echo '<p class="granted">Soutenance modifiée !</p>';
+			}
 	}
 
 	/*
@@ -460,13 +467,15 @@ class prof
 		return $dates;
 	}
 	
-	public function RAZ() {
-		mysql_query('DELETE FROM binome');
-		mysql_query('DELETE FROM eleves');
-		mysql_query('DELETE FROM date');
-		mysql_query('DELETE FROM indisponibilite');
-		mysql_query('DELETE FROM planning');
-		mysql_query('DELETE FROM soutenance');
+	public function RAZ($b, $e, $d, $i, $s, $p) {
+		if($b == "on") mysql_query('DELETE FROM binome') or die('Problèmes suppression binomes');
+		if($e == "on") mysql_query('DELETE FROM eleves') or die('Problème suppression eleves');
+		if($d == "on") mysql_query('DELETE FROM date') or die('Problème suppression dates');
+		if($i == "on") mysql_query('DELETE FROM indisponibilite') or die('Problème suppression indisponibilites');
+		if($s == "on") mysql_query('DELETE FROM soutenance') or die('Problème suppression soutenances');
+		if($p == "on") mysql_query('DELETE FROM projets') or die('Problème suppression projets');
+
+		echo '<p class="granted">Remise à zéro effectuée !</p>';
 	}
 	
 	public function generer_compteur_csv() {

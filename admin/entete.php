@@ -14,9 +14,10 @@
 		'gestion_soutenance' => 'liste_soutenance.php',
 		'compte_projet_enseignant' => 'compte_projet.php',
 		'edition_soutenance' => 'edition_soutenance.php',
+		'raz' => 'raz.php',
 		'creer_fichier_voeux' => 'wish_bin.php', //admin
 		'recuperer_affectation' => 'wish_affect.php' // admin
-		);			
+		);
 		@session_start();
 		if (empty($_GET['page']))
 		{

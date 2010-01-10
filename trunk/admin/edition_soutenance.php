@@ -5,15 +5,15 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 {
 	
 	$ret = mysql_query('SELECT * FROM soutenance WHERE id_bin = "'.$_GET['bin'].'"');
-	if(mysql_num_rows($ret) > 0)
+	if(mysql_num_rows($ret) > 0) {
 		$modif = true;
+		$d = mysql_fetch_array($ret);
+	}
 	else
 		$modif = false;
 	
-	$d2 = mysql_fetch_array($ret);
-	
 	if(isset($_POST['binome'])) {
-		$objet->ajouter_soutenance($_POST['binome'], $_GET['niveau'], $_GET['jour'], $_GET['heure'], $_POST['salle'], $_POST['jury'], $_POST['modif']);
+		$objet->ajouter_soutenance($_POST['binome'], $_GET['niveau'], $_GET['jour'], $_GET['heure'], $_POST['salle'], $_POST['jury'], $modif);	
 	}
 	
 	$d = mysql_query("SELECT deb_soutenance,fin_soutenance,niveau FROM date WHERE niveau = '".$_GET['niveau']."'");
@@ -30,21 +30,19 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	
 	$ret = mysql_query('SELECT * FROM binome WHERE niveau = "'.$_GET['niveau'].'"');
 	while($donnees = mysql_fetch_array($ret)) {
-		$selec = "";
-		if($d2['id_bin'] == $donnees['num']) $selec = 'selected="selected"'; 
-		echo '<option value="'.$donnees['num'].'" '.$selec.'>'.$donnees['num'].' : '.$donnees['nom1'].' - '.$donnees['nom2'].'</option>';
+		echo '<option value="'.$donnees['num'].'">'.$donnees['num'].' : '.$donnees['nom1'].' - '.$donnees['nom2'].'</option>';
 	}
 	
 	echo '</select>';
 	
-	echo '<p>Salle : <input type="text" name="salle" size="3" maxlength="5" value="'.$d2['salle'].'" /></p>';
+	echo '<p>Salle : <input type="text" name="salle" size="3" maxlength="5" /></p>';
 	
 	echo '<p style="float:left;">Jury : <select name="jury">';
 	$p = mysql_query("SELECT login FROM prof");
 	while ($prof = mysql_fetch_array($p))
 	{
 		echo '<option ';
-		if ($d2['tuteur_comp'] == $prof['login']) echo ' selected="selected"';
+		if ($rowmodif['tuteur_comp'] == $prof['login']) echo ' selected="selected"';
 		echo ' name="' . $prof['login'] . '">' . $prof['login'] . '</option>';
 	}
 		
@@ -58,7 +56,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	
 	echo '</span><div style="clear:both"></div>';
 	
-	echo '<input type="hidden" name="modif" value="'.$modif.'" /><input type="submit" value="Envoyer" />
+	echo '<input type="submit" value="Envoyer" />
 	</form>';
 }
 ?>

@@ -361,15 +361,15 @@ class prof
 			$date = mysql_fetch_assoc($r);
 
 			switch($jour) {
-				case "lundi" : $valeur_j = 1;
-				case "mardi" : $valeur_j = 2;
-				case "mercredi" : $valeur_j = 3;
-				case "jeudi" : $valeur_j = 4;
-				case "vendredi" : $valeur_j = 5;
-				default : $valeur_j = 0;
+				case "lundi" : $valeur_j = date("d", $date['deb_soutenance'])+1-date("w", $date['deb_soutenance']); break;
+				case "mardi" : $valeur_j = date("d", $date['deb_soutenance'])+2-date("w", $date['deb_soutenance']); break;
+				case "mercredi" : $valeur_j = date("d", $date['deb_soutenance'])+3-date("w", $date['deb_soutenance']); break;
+				case "jeudi" : $valeur_j = date("d", $date['deb_soutenance'])+4-date("w", $date['deb_soutenance']); break;
+				case "vendredi" : $valeur_j = date("d", $date['deb_soutenance'])+5-date("w", $date['deb_soutenance']); break;
+				default : $valeur_j = $jour;
 			}
 			
-			$jour_soutenance = mktime($heure+7, 0, 0, date("m", $date['deb_soutenance']), date("d", $date['deb_soutenance'])+$valeur_j, date("Y", $date['deb_soutenance']));
+			$jour_soutenance = mktime($heure+7, 0, 0, date("m", $date['deb_soutenance']), $valeur_j, date("Y", $date['deb_soutenance']));
 
 			if (!$modif) {
 				mysql_query("INSERT INTO soutenance VALUES ('" . $num_bin . "','" . $jour_soutenance . "','" . $salle . "','" . $jury . "')");

@@ -14,12 +14,12 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	{	
 		$objet->ajouter_utilisateur($_POST['mdp'], $_POST['mdp2'], $_POST['gen'], $_POST['mode'], $_POST['type'], $_POST['nom'], $_POST['prenom'], $_POST['groupe'], $_POST['login'], $_POST['niveau'], $_POST['loginold']);	
 		
-		echo 'Utilisateur ajouté ou modifié ! Vous allez etre redirigé.
+		echo '<p class="granted">Utilisateur ajouté ou modifié ! Vous allez etre redirigé.</p>
 		<script type="text/javascript">redirection("gestion_utilisateur");</script>';		
 	}
 	else
 	{
-		echo 'Tous les champs sont obligatoires';
+		echo '<p class="warning">Tous les champs sont obligatoires</p>';
 	}
 	
     echo '<h1>Ajout d\'un utilisateur</h1>

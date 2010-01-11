@@ -301,7 +301,7 @@ class eleves
 	*/
 	public function datecorrecte($attribut) 
 	{
-		$dat = mysql_query("SELECT " . $attribut . " FROM date WHERE niveau='" . $this->info_niveau() . "'");
+		$dat = mysql_query("SELECT " . $attribut . " FROM date WHERE niveau='" . substr($this->info_niveau(), 0, 2) . "'");
 		$date = mysql_fetch_array($dat);
 		$date = $date[$attribut];
 		

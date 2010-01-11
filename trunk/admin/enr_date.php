@@ -8,8 +8,18 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	if (isset($_POST['m1']))
 	{
 		$verif = true;
-		for($i = 0; $i<=9; $i++) {
+		for($i = 0; $i<=10; $i++) {
 			if(empty($_POST['j'.$i]))
+				$verif = false;
+		}
+		
+		for($j = 0; $j<=10; $j++) {
+			if(empty($_POST['h'.$j]))
+				$verif = false;
+		}
+		
+		for($k = 0; $k<=10; $k++) {
+			if(empty($_POST['mm'.$k]))
 				$verif = false;
 		}
 		
@@ -19,7 +29,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 			$j = array();
 			$a = array();
 			$h = array();
-			for ($i = 0 ; $i <= 9 ; $i++) // Pour chaque mois de l'année scolaire
+			for ($i = 0 ; $i <= 10 ; $i++) // Pour chaque mois de l'année scolaire
 			{
 				$m[] = $_POST['m' . $i];
 				$h[] = $_POST['h' . $i];
@@ -44,8 +54,8 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	
 	$dates_enr = $objet->recup_dates_planning($_GET['niveau']);
 	
-	$mois = array("janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
-	$infos =array("Constitution des binômes","Proposition des projets par les enseignants","Début réunion de coordination des projets","Diffusion des sujets proposés","Choix <b>ordonnée</b> des sujets par les étudiants (<b>5 choix</b>)","Publication de l'attribution des sujets","Remise du rapport préliminaire (au tuteur)","Remise du rapport (au secrétariat)","Début soutenances de projets","Fin soutenances de projets");
+	$mois = array("janvier","février","mars","avril","mai","juin","juillet","aout","septembre","octobre","novembre","décembre");
+	$infos =array("Constitution des binômes","Proposition des projets par les enseignants","Début réunion de coordination des projets","Diffusion des sujets proposés","Choix <b>ordonnée</b> des sujets par les étudiants (<b>5 choix</b>)","Publication de l'attribution des sujets","Remise du rapport préliminaire (au tuteur)","Remise du rapport (au secrétariat)","Début soutenances de projets","Fin soutenances de projets", "Soutenance éleves parant a l'étranger <br />(ignorer si AS ou LP)");
 	$annee = date("Y",time());
 	
 	echo '<table>	
@@ -58,7 +68,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 		</td>
 	</tr>';
 	
-	for( $i = 0 ; $i <= 9 ; $i++)
+	for( $i = 0 ; $i <= 10 ; $i++)
 	{	
 		echo '
 		<tr> 
@@ -74,15 +84,16 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 					$selec = "";
 				echo '<option '.$selec.'>' . ucfirst($mois[$j]) . '</option>';
 			}
-			echo '</select>';
-			
-			$annee1_selec = "";
-			$annee2_selec = "";
-			if($dates_enr[$i][2] == $annee) $annee1_selec = 'selected="selected"'; else $annee2_selec = 'selected="selected"'; 
+		
+		$a = $dates_enr[$i][2];
+		$selec1="";
+		$selec2="";
+		if($a == $annee) $selec1 = 'selected="selected"'; else $selec2='selected="selected"';
+		
 		echo '</select>&nbsp; 
 			<select name="a' . $i . '">
-				<option '.$annee1_selec.'>' . $annee . '</option>
-				<option '.$annee2_selec.'>' . ($annee + 1) . '</option>
+				<option '.$selec1.'>' . $annee . '</option>
+				<option '.$selec2.'>' . ($annee + 1) . '</option>
 			</select>&nbsp à &nbsp;
 				<input type="text" size="2" maxlength="2" name="h' . $i . '" value="'.$dates_enr[$i][3].'" />&nbsp; h&nbsp; 
 				<input type="text" size="2" maxlength="2" name="mm' . $i . '" value="'.$dates_enr[$i][4].'" /> &nbsp; &nbsp; &nbsp;
@@ -103,7 +114,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 }
 else
 {
-echo 'Vous n\'avez pas accès à cette page	
+echo 'Vous n\'avez pas acccs r cette page	
 <script type="text/javascript">redirection("login");</script>';
 }
 ?>

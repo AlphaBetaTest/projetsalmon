@@ -303,14 +303,16 @@ class prof
 	*/
 	public function enregistrer_date($tab_m, $tab_h, $tab_mm, $tab_j, $tab_a, $annee, $niveau)
 	{
-		for ($i = 0 ; $i <= 9 ; $i++) // Pour chaque mois de l'année scolaire
+		for ($i = 0 ; $i <= 10 ; $i++) // Pour chaque mois de l'année scolaire
 		{
-			$mois = array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
+			$mois = array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre");
 			$moi = $this->mois_en_chiffre($tab_m[$i], $mois); // On récupere le numéro du mois concerné
 			$dates[$i] = mktime($tab_h[$i], $tab_mm[$i], 0, $moi, $tab_j[$i], $tab_a[$i]); // On crée le TIMESTAMP de chaque date entrée
 		}
 		
-		mysql_query("INSERT INTO date VALUES('" .$annee	. "','" . $dates[0] . "','" . $dates[1] . "','" . $dates[2] . "','" . $dates[3] . "','" . $dates[4] . "','" . $dates[5] . "','" . $dates[6] . "','" . $dates[7] . "','" . $dates[8] . "','" . $dates[9] . "','" . $niveau . "')");
+		if($niveau != "A2") $dates[10] == 0;
+		
+		mysql_query("INSERT INTO date VALUES('" .$annee	. "','" . $dates[0] . "','" . $dates[1] . "','" . $dates[2] . "','" . $dates[3] . "','" . $dates[4] . "','" . $dates[5] . "','" . $dates[6] . "','" . $dates[7] . "','" . $dates[8] . "','" . $dates[9] . "','" . $niveau . "', '".$dates[10]."')");
 	}	
 	
 	/*
@@ -318,14 +320,16 @@ class prof
 	*/
 	public function modifier_date($tab_m, $tab_h, $tab_mm, $tab_j, $tab_a, $annee, $niveau)
 	{
-		for ($i = 0 ; $i <= 9 ; $i++) // Pour chaque mois de l'année scolaire
+		for ($i = 0 ; $i <= 10 ; $i++) // Pour chaque mois de l'année scolaire
 		{
-			$mois = array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
+			$mois = array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre");
 			$moi = $this->mois_en_chiffre($tab_m[$i], $mois); // On récupere le numéro du mois concerné
 			$dates[$i] = mktime($tab_h[$i], $tab_mm[$i], 0, $moi, $tab_j[$i], $tab_a[$i]); // On crée le TIMESTAMP de chaque date entrée
 		}
 		
-		mysql_query("UPDATE date SET annee='" .$annee. "', construction_binome='" .$dates[0]. "', enregistrement_projet='" .$dates[1] . "', reunion_coor='" . $dates[2] . "', diffusion_sujet='" . $dates[3] . "', formulation_voeux='" . $dates[4] . "', affectation_sujet='" . $dates[5] . "', rapport_pre='" . $dates[6] . "', remise_rapport='" . $dates[7] . "', deb_soutenance='" . $dates[8] . "', fin_soutenance='" . $dates[9] . "' WHERE niveau='" . $niveau . "'") or die('<p class="warning">Erreur lors de la MAJ : </p>'.mysql_error());
+		if($niveau != "A2") $dates[10] == 0;
+		
+		mysql_query("UPDATE date SET annee='" .$annee. "', construction_binome='" .$dates[0]. "', enregistrement_projet='" .$dates[1] . "', reunion_coor='" . $dates[2] . "', diffusion_sujet='" . $dates[3] . "', formulation_voeux='" . $dates[4] . "', affectation_sujet='" . $dates[5] . "', rapport_pre='" . $dates[6] . "', remise_rapport='" . $dates[7] . "', deb_soutenance='" . $dates[8] . "', fin_soutenance='" . $dates[9] . "', soutenance_etranger='". $dates[10] ."' WHERE niveau='" . $niveau . "'") or die('<p class="warning">Erreur lors de la MAJ : </p>'.mysql_error());
 	}	
 		
 	/*
@@ -453,10 +457,11 @@ class prof
 			$valeurs[7] = $donnees['remise_rapport'];
 			$valeurs[8] = $donnees['deb_soutenance'];
 			$valeurs[9] = $donnees['fin_soutenance'];
+			$valeurs[10] = $donnees['soutenance_etranger'];
 			
 			$dates = array();
 			
-			for($i=0; $i<10; $i++) {
+			for($i=0; $i<11; $i++) {
 				$dates[$i][0] = date('d', $valeurs[$i]);
 				$dates[$i][1] = date('m', $valeurs[$i]);
 				$dates[$i][2] = date('Y', $valeurs[$i]);

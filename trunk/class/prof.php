@@ -103,6 +103,36 @@ class prof
 	}
 	
 	/*
+	* Récupere tous les sujets d'un professeur
+	*/
+	public function recup_sujets() {
+		$sujets = array();
+		$retour = mysql_query('SELECT * FROM projets WHERE tuteur1 = "'.$this->login.'" ORDER BY id_proj DESC');	
+		while($donnees = mysql_fetch_array($retour)) {
+			$sujets[] = $donnees;	
+		}
+		return $sujets;
+	}
+	
+	/*
+	*
+	*/
+	public function supprimer_sujet($id) {
+		$retour = mysql_query('SELECT * FROM projets WHERE id_proj = "'.$id.'"');
+		
+		if(mysql_num_rows($retour) == 1)
+			$donnees = mysql_fetch_array($retour);
+		
+		if($donnees['tuteur1'] == $this->login) {
+			mysql_query('DELETE FROM projets WHERE id_proj = "'.$id.'"') or die('Erreur lors de la suppression du sujet');
+			echo '<p class="granted">Projet supprimé !</p>';
+		}
+		else {
+			echo '<p class="warning">Vous n\'avez pas le droit de supprimer ce sujet !</p>';	
+		}
+	}
+	
+	/*
 	* Ajoute les indisponibilités d'un prof
 	*/
 	public function ajouter_indisponibilite()

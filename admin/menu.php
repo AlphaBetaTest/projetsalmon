@@ -100,6 +100,7 @@
 		{
 			echo '<!-- Pour les enseignants -->
 			<li class="normal"><a href="../index.php?page=enregistrer_projet">Enregistrer un sujet</a></li>
+			<li class="normal"><a href="../index.php?page=editer_sujet">Voir mes sujets</a></li>
 			<li class="normal"><a href="../index.php?page=ajouter_indisponibilite">Ajouter ses indisponibilites</a></li>';			
 			
 		

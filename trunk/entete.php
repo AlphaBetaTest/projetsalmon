@@ -11,6 +11,7 @@
 		'ajouter_indisponibilite' => 'indisponibilite.php', //prof
 		'affiche_date' => 'affiche_date.php',		//all
 		'affiche_soutenance' => 'planning_soutenance.php',
+		'editer_sujet' => 'edit_sujet.php',
 		'description' => 'desc_projet.php'
 		);		
 		

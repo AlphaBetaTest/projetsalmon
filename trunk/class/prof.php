@@ -502,13 +502,14 @@ class prof
 		return $dates;
 	}
 	
-	public function RAZ($b, $e, $d, $i, $s, $p) {
+	public function RAZ($b, $e, $d, $i, $s, $p, $souhaits) {
 		if($b == "on") mysql_query('DELETE FROM binome') or die('Problèmes suppression binomes');
 		if($e == "on") mysql_query('DELETE FROM eleves') or die('Problème suppression eleves');
 		if($d == "on") mysql_query('DELETE FROM date') or die('Problème suppression dates');
 		if($i == "on") mysql_query('DELETE FROM indisponibilite') or die('Problème suppression indisponibilites');
 		if($s == "on") mysql_query('DELETE FROM soutenance') or die('Problème suppression soutenances');
 		if($p == "on") mysql_query('DELETE FROM projets') or die('Problème suppression projets');
+		if($souhaits == "on") mysql_query('DELETE FROM wish') or die ('Problème suppression souhaits');
 
 		echo '<p class="granted">Remise à zéro effectuée !</p>';
 	}

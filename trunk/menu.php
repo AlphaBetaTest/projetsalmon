@@ -1,7 +1,7 @@
 <div id="menu">
 <!-- Debut du menu -->
 <ul>
-	<li class="normal">
+	<!--<li class="normal">
 		<a href="#">ACTUALITES</a>
 	</li>
 	<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);">
@@ -51,7 +51,7 @@
 	</li>
 	<li class="normal">
 		<a href="#">Espace Etudiants</a>
-	</li>
+	</li>-->
 	<?php 
 		
 	
@@ -136,7 +136,7 @@
 			
 						</ul>
 					</li>
-					<li class="normal"><a href="?page=raz">Remette à zéro</a></li>
+					<li class="normal"><a href="admin/index.php?page=raz">Remette à zéro</a></li>
 			</ul></li>';
 			}				
 		}

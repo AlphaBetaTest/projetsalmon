@@ -18,11 +18,15 @@ else
 	<th class="border_cellule">Intitulé du sujet</th>
 	<th class="border_cellule">Description</th>
 	<th class="border_cellule">Binôme(s) souhaité(s)</th>
-	<th class="border_cellule">Remarques</th>
-	<th class="border_cellule">Groupe</th>';
+	<th class="border_cellule">Remarques</th>';
+	if($_GET['niveau'] == "LP")
+	 echo '<th class="border_cellule">Groupe</th>';
 
 	if (mysql_num_rows($sql) == 0)
-		echo '<tr><td colspan="4">Aucun projet n\'a &eacute;t&eacute; ajout&eacute; dans cette cat&eacute;gorie</td></tr>';
+		if($_GET['niveau'] == "LP")
+			echo '<tr><td colspan="6">Aucun projet n\'a &eacute;t&eacute; ajout&eacute; dans cette cat&eacute;gorie</td></tr>';
+		else
+			echo '<tr><td colspan="5">Aucun projet n\'a &eacute;t&eacute; ajout&eacute; dans cette cat&eacute;gorie</td></tr>';
 	else
 	{
 		while ($donnees = mysql_fetch_array($sql))
@@ -34,9 +38,10 @@ else
 			<td class="border_cellule">' . $donnees['titre'] . '</td>
 			<td class="border_cellule"><a href="?page=description&id='.$donnees['id_proj'].'" class="survol" title="Description détaillée">'. substr($donnees['description'], 0, 30) .'...<span>'.$donnees['description'].'</span></a></td>
 			<td class="border_cellule">' . $donnees['binwish'] . '</td>
-			<td class="border_cellule"><a href="?page=description&id='.$donnees['id_proj'].'" class="survol" title="Description détaillée">' . substr($donnees['remarques'], 0, 30) . '...<span>'.$donnees['remarques'].'</span></a></td>
-			<td class="border_cellule">' . $donnees['groupe'] . '</td>
-			</tr>';
+			<td class="border_cellule"><a href="?page=description&id='.$donnees['id_proj'].'" class="survol" title="Description détaillée">' . substr($donnees['remarques'], 0, 30) . '...<span>'.$donnees['remarques'].'</span></a></td>';
+			if($_GET['niveau'] == "LP")
+				echo '<td class="border_cellule">' . $donnees['groupe'] . '</td>';
+			echo '</tr>';
 		}
 	}
 	echo '</table>';

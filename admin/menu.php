@@ -86,8 +86,8 @@
 		
 	if (!empty($_SESSION['objet']))
 	{
-		echo '<li class="normal"><a href="?page=login&action=modif">Modifier son mot de passe</a></li>';
-		echo '<li class="normal"><a href="?page=login&action=logout">Se déconnecter</a></li>';
+		echo '<li class="normal"><a href="../index.php?page=login&action=modif">Modifier son mot de passe</a></li>';
+		echo '<li class="normal"><a href="../index.php?page=login&action=logout">Se déconnecter</a></li>';
 
 		$objet = unserialize($_SESSION['objet']);		
 		if ($objet->type() == "eleves")

@@ -2,10 +2,10 @@
 
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit(1))
+if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'administrateur
 {
 ?>
-<h1> Ajout de la nouvelle promotion </h1>
+<h1>Ajout de la nouvelle promotion</h1>
 <p>Veuillez envoyer le fichier resultat.csv créé a partir du fichier excel nommé "promo.csv". <b>Pensez a sélectionner correctement le niveau avant !</b>
 <br />
 <br /><u>Rappel des spécifications :</u><br />
@@ -39,7 +39,7 @@ Exemple de fichier xls :<br />
 
 <?php
 
-	if (isset($_FILES['fich']))
+	if (isset($_FILES['fich'])) // si on a validé le formulaire
 	{	
 		$objet->ajouter_multiutilisateur($_FILES['fich'], $_POST['niveau']);
 	}	

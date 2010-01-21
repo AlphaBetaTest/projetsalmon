@@ -1,15 +1,15 @@
 <?php 
 $objet = unserialize($_SESSION['objet']);
-if ($_SESSION['objet'] != "" && $objet->get_droit(1))
+if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'administrateur
 {
 	
-	if (isset($_GET['mode']) && $_GET['mode'] == "Modifier")
+	if (isset($_GET['mode']) && $_GET['mode'] == "Modifier") // Si on modifie un utilisateur
 	{		
-		$user = mysql_query("SELECT * FROM " . $_GET['type'] . " WHERE login='" . $_GET['log'] . "'");
+		$user = mysql_query("SELECT * FROM " . $_GET['type'] . " WHERE login='" . $_GET['log'] . "'"); // on récupere l'utilisateur en question
 		$user = mysql_fetch_assoc($user); 
 	}
 
-	// traitement formulaire
+	// traitement formulaire : les champs sont-ils tous remplis ?
 	if ($_POST['nom'] != "" && $_POST['prenom'] != "" && $_POST['mdp'] != "" && $_POST['mdp2'] != "" && $_POST['login'] != "")
 	{	
 		$objet->ajouter_utilisateur($_POST['mdp'], $_POST['mdp2'], $_POST['gen'], $_POST['mode'], $_POST['type'], $_POST['nom'], $_POST['prenom'], $_POST['groupe'], $_POST['login'], $_POST['niveau'], $_POST['loginold']);	
@@ -28,11 +28,11 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	Nom : <input type="text" size="30" name="nom" value="' . $user['nom'] . '" /><br/>
 	Prénom : <input type="text" size="30" name="prenom" value="' . $user['prenom'] . '" /><br/>';
 	
-		if ($_GET['type'] == "eleves" || $_POST['type'] == "eleves") 
+		if ($_GET['type'] == "eleves" || $_POST['type'] == "eleves")  // s'il s'agit d'un éleve qu'on souhaite ajouter
 		{
 			echo 'Groupe : <select name="groupe">';
-			$groupe = mysql_query("SELECT distinct(groupe) FROM eleves ORDER BY groupe ASC");
-			while ($groupes = mysql_fetch_array($groupe))
+			$groupe = mysql_query("SELECT distinct(groupe) FROM eleves ORDER BY groupe ASC"); // on récupere tous les groupes d'éleves
+			while ($groupes = mysql_fetch_array($groupe)) // pour chaque groupe
 			{
 				echo '<option';
 				if ($user['groupe'] == $groupes['groupe'])
@@ -50,12 +50,12 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 				<option>AS</option>
 				</select><br/>';
 	
-		if ($_GET['type'] == "prof") 
+		if ($_GET['type'] == "prof") // pour un professeur a ajouter
 			echo 'Admin : ';
 		else
 			echo 'Choisi dans un binôme : ';
 	
-	echo '<input type="checkbox" name="gen"'; 
+	echo '<input type="checkbox" name="gen"'; 	
 	if($user['droit'] == 1 || $user['boolbin'] == 1) echo 'CHECKED'; 
 	echo '/><br/>
 	<input type="hidden" name="type" value="';

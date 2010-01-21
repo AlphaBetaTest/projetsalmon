@@ -1,5 +1,5 @@
 <div id="menu">
-<!-- Debut du menu -->
+<!-- Debut du menu de l'IUT : masqué car génait la navigation -->
 <ul>
 	<!--<li class="normal">
 		<a href="#">ACTUALITES</a>
@@ -88,13 +88,13 @@
 		echo '<li class="normal"><a href="?page=login&action=logout">Se déconnecter</a></li>';
 		
 		$objet = unserialize($_SESSION['objet']);				
-		if ($objet->type() == "eleves")
+		if ($objet->type() == "eleves") // Menu des eleves
 		{
 			echo '<!-- Pour les étudiants -->
 				<li class="normal"><a href="?page=choisir_binome">Choisir son bin&ocirc;me</a></li>
 				<li class="normal"><a href="?page=formulation_voeux">Formuler ses voeux</a></li>';			
 		}
-		else if ($objet->type() == "prof")
+		else if ($objet->type() == "prof") // Menu des professeurs
 		{
 			echo '<!-- Pour les enseignants -->
 			<li class="normal"><a href="?page=enregistrer_projet">Enregistrer un sujet</a></li>
@@ -104,7 +104,7 @@
 		
 			echo '</ul></li>';
 			
-			if ($objet->get_droit(1))
+			if ($objet->get_droit(1)) // Menu de l'administrateur
 			{
 				echo '<li class="normal deroulant" onmouseover="show(this);" onmouseout="hide(this);">
 					<a href="index.php">Admin Gestion des projets</a>
@@ -140,15 +140,8 @@
 			</ul></li>';
 			}				
 		}
-	}
-		
-		
-	
-	?>
-		
-
-
-
+	}	
+?>
 </div>
 <!-- Fin du menu -->
 			

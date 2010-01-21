@@ -3,7 +3,7 @@
 	echo '<p><b>Niveau : </b>	
 	<form action="?page=enregistrer_projet" method="post" name="formulaire">';
 	
-	$retour = mysql_query('SELECT * FROM projets WHERE id_proj = "'.$_GET['id'].'"');
+	$retour = mysql_query('SELECT * FROM projets WHERE id_proj = "'.$_GET['id'].'"'); // on récupere le projet dont l'id est dans l'url
 	$donnees = mysql_fetch_array($retour);
 			
 	$niv = array('A2','AS', 'LP');

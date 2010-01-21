@@ -202,7 +202,7 @@ class eleves
 	*/
 	public function ajouter_monome()
 	{		
-		mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','' , '1','" . $this->info_niveau() . "')"); // valide = 1 car monome donc pas de soucis de deuxieme nom
+		mysql_query("INSERT INTO binome VALUES('', '" . $this->login . "','' , '1', '0','" . $this->info_niveau() . "')") or die('Probleme lors de l\'ajout du binome'); // valide = 1 car monome donc pas de soucis de deuxieme nom
 		mysql_query("UPDATE eleves SET boolbin='1' WHERE login ='" . $this->login . "'"); // on retire le monôme de la liste
 
 		$this->del_useless($session,$nom2);	
@@ -228,7 +228,7 @@ class eleves
 	}
 
 	/*
-	*modifie le monôme choisit par l'utilisateur
+	* modifie le monôme choisit par l'utilisateur
 	*/
 	public function modifier_monome()
 	{
@@ -241,7 +241,7 @@ class eleves
 	// pour formulation_voeux
 	
 	/*
-	*retourne le numéro du binôme
+	*retourne le numéro du binôme dans lequel est l'utilisateur
 	*/
 	public function info_numbinome()
 	{
@@ -252,13 +252,13 @@ class eleves
 	}
 	
 	/*
-	*récupération des 5 voeux du binôme (monôme) et ajoutde ceux-ci dans la base 
+	*récupération des 5 voeux du binôme (monôme) et ajout de ceux-ci dans la base 
 	*/
 	function traitement_voeux ($numbinome)
 	{
 	
 		$req = mysql_query("SELECT * FROM projets");
-		while ( $donnees = mysql_fetch_array($req)) // affichage des projets
+		while ($donnees = mysql_fetch_array($req)) // pour chaque projets : on va vérifier que les numéros des souhaits correspondent
 		{		
 			if ($_POST['proj' . $donnees['id_proj']] != "")
 			{
@@ -287,9 +287,9 @@ class eleves
 				}				
 			}
 		}	
-		if ($wish1 != "" && $wish2 != "" && $wish3 != "" && $wish4 != "" && $wish5 != "")
+		if ($wish1 != "" && $wish2 != "" && $wish3 != "" && $wish4 != "" && $wish5 != "") // s'il y a bien 5 voeux
 		{
-			mysql_query("INSERT INTO wish VALUES ('" . $numbinome . "', '" . $wish1 . "', '" . $wish2 . "', '" . $wish3 . "', '" . $wish4 . "', '" . $wish5. "','" . $this->info_niveau() . "')");
+			mysql_query("INSERT INTO wish VALUES ('" . $numbinome . "', '" . $wish1 . "', '" . $wish2 . "', '" . $wish3 . "', '" . $wish4 . "', '" . $wish5. "','" . $this->info_niveau() . "')"); // ajout des voeux dans la table
 			return "Vous souhaits ont &eacute;t&eacute; pris en compte.";
 		}
 		else
@@ -297,7 +297,7 @@ class eleves
 	}
 
 	/*
-	*retourne vrai si l'utilisateur à encore le droit de modifier ou créer son binôme, faux sinon
+	*retourne vrai si l'utilisateur a encore le droit de modifier ou créer son binôme, faux sinon
 	*/
 	public function datecorrecte($attribut) 
 	{

@@ -2,9 +2,9 @@
 
 $objet = unserialize($_SESSION['objet']);	
 
-if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
+if ($_SESSION['objet'] != "" && $objet->type() == "eleves") // Page réservée aux éleves
 {		
-		$session = $objet->info_login();
+		$session = $objet->info_login(); // ne pas supprimer cette variable !
 		
 		echo'<h1>Choix du bin&ocirc;me</h1>';
 		
@@ -12,8 +12,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 		* aurait fait un souhait de binome qu'un autre utilisateur aurait validé mais que ce premier ne ce soit pas déconnecté
 		* entre temps (et ainsi modifier la valeur de boolbin dans l'objet)
 		*/
-		
-		if($objet->get_boolbin(0) && $objet->est_en_binome()) {
+		if($objet->get_boolbin(0) && $objet->est_en_binome()) { 
 			$objet->modif_boolbin();
 		}
 		
@@ -29,28 +28,28 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 				
 				if (!$objet->test_modif_choix()) // Si on ne modifie pas un choix
 				{ 	
-					// Cr&eacute;ation du choix
-					if ($_POST['type'] == 'binome') //cas bin&ocirc;me
+					// Creation du choix
+					if ($_POST['type'] == 'binome') //cas binome
 					{
 						$loginnom2 = $objet->renseigner_login($nom2,$nom2pre);	// On récupere le login de la personne choisie
 						$objet->ajouter_binome($loginnom2);	// On ajoute temporairement binome utilisateur/personne choisie
 					}
-					else // cas du mon&ocirc;me
+					else // cas du monome
 					{
 						$objet->ajouter_monome();
+						$objet->modif_boolbin();
 					}					
 				}
 				else // Si on modifie notre choix
 				{				
-					if ($_POST['type'] == 'binome') //cas bin&ocirc;me					
+					if ($_POST['type'] == 'binome') //cas binome					
 					{
 						$loginnom2 = $objet->renseigner_login($nom2,$nom2pre);					
 						$objet->modifier_binome($loginnom2);
 					}
-					else // cas du mon&ocirc;me
+					else // cas du monome
 						$objet->modifier_monome();				
 				}
-					//echo '<br/>Ton choix a &eacute;t&eacute; pris en compte';
 					$_SESSION['objet'] = serialize($objet); // Pour sauvegarder la valeur modifiée ou non de boolbin
 					echo '<p class="granted">Choix pris en compte !</p>';
 			}
@@ -72,7 +71,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 				
 				while ($donnees = mysql_fetch_array($retour)) // listing des éleves du meme groupe
 				{			
-					if ($donnees['boolbin'] == 0 && $donnees['login'] != $session)
+					if ($donnees['boolbin'] == 0 && $donnees['login'] != $session) // si l'éleve listé n'est pas en binome et si ce n'est pas l'utilisateur
 					{
 					echo '<option>' . $donnees['nom'] . ' ' . $donnees['prenom'] . '</option>';
 					}
@@ -85,7 +84,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves")
 		}	
 		else
 		{
-			if ($objet->get_boolbin(0) && !$objet->datecorrecte("construction_binome"))			 
+			if ($objet->get_boolbin(0) && !$objet->datecorrecte("construction_binome")) // n'est-il pas trop tard pour faire la sélection de binome ?	 
 				echo '<p class="warning">Date d&eacute;pass&eacute;e, tu ne peux plus cr&eacute;er ou modifier ton bin&ocirc;me ! <br/>
 									Contacte l\'administrateur pour plus d\'informations.</p>';
 			

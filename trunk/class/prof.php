@@ -115,15 +115,15 @@ class prof
 	}
 	
 	/*
-	*
+	* Permet de supprimer le sujet de parametre $id
 	*/
 	public function supprimer_sujet($id) {
 		$retour = mysql_query('SELECT * FROM projets WHERE id_proj = "'.$id.'"');
 		
-		if(mysql_num_rows($retour) == 1)
+		if(mysql_num_rows($retour) == 1) // ce projet existe t-il ?
 			$donnees = mysql_fetch_array($retour);
 		
-		if($donnees['tuteur1'] == $this->login) {
+		if($donnees['tuteur1'] == $this->login) { // appartient-il a l'utilisateur ?
 			mysql_query('DELETE FROM projets WHERE id_proj = "'.$id.'"') or die('Erreur lors de la suppression du sujet');
 			echo '<p class="granted">Projet supprimé !</p>';
 		}
@@ -388,13 +388,21 @@ class prof
 
 	/*
 	* Permet d'ajouter une soutenance
+	* num_bin : numéro du binome concerné
+	* niveau : niveau du binome
+	* jour : jour de la soutenance
+	* heure : heure de la soutenance
+	* salle : salle de la soutenance
+	* jury : jury présent a la soutenance
+	* modif : si la soutenance est en train d'etre modifiée ou non
 	*/
 	public function ajouter_soutenance($num_bin, $niveau, $jour, $heure, $salle, $jury, $modif)
 	{
 			$r = mysql_query("SELECT deb_soutenance FROM date WHERE niveau = '".$niveau."'");
 			$date = mysql_fetch_assoc($r);
-
-			switch($jour) {
+			
+			// suivant le jour qu'on a donné, on calcule le décalage entre le premier jour des soutenance et le jour donné
+			switch($jour) { 
 				case "lundi" : $valeur_j = date("d", $date['deb_soutenance'])+1-date("w", $date['deb_soutenance']); break;
 				case "mardi" : $valeur_j = date("d", $date['deb_soutenance'])+2-date("w", $date['deb_soutenance']); break;
 				case "mercredi" : $valeur_j = date("d", $date['deb_soutenance'])+3-date("w", $date['deb_soutenance']); break;
@@ -405,7 +413,7 @@ class prof
 			
 			$jour_soutenance = mktime($heure+7, 0, 0, date("m", $date['deb_soutenance']), $valeur_j, date("Y", $date['deb_soutenance']));
 
-			if (!$modif) {
+			if (!$modif) { // si on ne modifie pas
 				mysql_query("INSERT INTO soutenance VALUES ('" . $num_bin . "','" . $jour_soutenance . "','" . $salle . "','" . $jury . "')");
 				echo '<p class="granted">Soutenance ajoutée !</p>';
 			}
@@ -421,19 +429,19 @@ class prof
 	public function recuperer_affectation($fichier,$niveau)
 	{
 		$infosfichier = pathinfo($fichier['name']);
-		if (strtolower($infosfichier['extension']) == "txt");
+		if (strtolower($infosfichier['extension']) == "txt"); // si on a un fichier texte
 		{
-			$nomfichier = "wishaffect.txt";
-			$chemin = '../files/'. $nomfichier;
-			move_uploaded_file($fichier['tmp_name'], $chemin);
+			$nomfichier = "wishaffect.txt"; // on le renomme
+			$chemin = '../files/'. $nomfichier; // on défini son chemin de destination
+			move_uploaded_file($fichier['tmp_name'], $chemin); // on l'envoi sur le serveur
 			echo "<p class=\"granted\">Envoie effectué ! </p>";
 		}	
 	
-		$MonFichier = "../files/wishaffect.txt";
-		$F = fopen($MonFichier,"r");
+		$MonFichier = "../files/wishaffect.txt"; // on définit le fichier a analyser
+		$F = fopen($MonFichier,"r"); // on l'ouvre en lecture
 		$texte = "";	
-		$motif = "#[0-9]+#"; // recherche d'un ou plusieurs chiffre
-		while (!feof($F))
+		$motif = "#[0-9]+#"; // recherche d'un ou plusieurs chiffre : le premier chiffre de chaque ligne correspond au binome, le deuxieme est le numéro de sujet
+		while (!feof($F)) // on parcourt tout le fichier
 		{
 			$texte = fgets($F,255);
 			preg_match_all($motif,$texte,$out);  // renvoie dans le tableau out toute les occurences par rapport au motif		
@@ -445,24 +453,24 @@ class prof
 	
 	
 	/*
-	*
+	* renvoi la liste des professeurs disponibles a une heure et un jour donné
 	*/
 	public function prof_disponibles_heure($jour, $heure) {
-		$profs_dispos = array();
-		$profs_indispos = array();
-		$retour = mysql_query('SELECT * FROM indisponibilite');
+		$profs_dispos = array(); // tableau des profs disponibles
+		$profs_indispos = array(); // tableau des profs indisponibles
+		$retour = mysql_query('SELECT * FROM indisponibilite'); // on récupere les indisponibilités de tous les profs
 		while($donnees = mysql_fetch_array($retour)) {
 			$indispos_prof = explode(";", $donnees[$jour]); // liste des heures ou le prof n'est pas la le jour demandé
 			if(!in_array($heure, $indispos_prof)) // si l'heure demandé ne fait pas partie de ses indisponibilités
 				$profs_dispos[] = $donnees['login']; // on l'ajoute a la liste des profs disponibles
 			
-			if(in_array($heure, $indispos_prof))
+			if(in_array($heure, $indispos_prof)) // si l'heure demandée fait parti des heures ou le prof n'est pas la
 				$profs_indispos[] = $donnees['login'];
 		}
 		
-		$ret = mysql_query('SELECT login FROM prof');
+		$ret = mysql_query('SELECT login FROM prof'); // on récupere tous les profs
 		while($d = mysql_fetch_array($ret)) {
-			if(!in_array($d['login'], $profs_indispos) && !in_array($d['login'], $profs_dispos)) 
+			if(!in_array($d['login'], $profs_indispos) && !in_array($d['login'], $profs_dispos)) // si le prof courant ne fait pas parti de ceux indisponibles, alors il est disponible
 				$profs_dispos[] = $d['login'];
 		}
 		sort($profs_dispos);
@@ -470,6 +478,9 @@ class prof
 		return $profs_dispos;
 	}
 	
+	/*
+	* Permet de récupérer les dates du planning suivant le niveau donné
+	*/
 	public function recup_dates_planning($niveau) {
 		$retour = mysql_query('SELECT * FROM date WHERE niveau ="'.$niveau.'"');
 		$donnees = mysql_fetch_array($retour);
@@ -502,6 +513,9 @@ class prof
 		return $dates;
 	}
 	
+	/*
+	* Permet de remettre a zéro les tables passées en parametre
+	*/
 	public function RAZ($b, $e, $d, $i, $s, $p, $souhaits) {
 		if($b == "on") mysql_query('DELETE FROM binome') or die('Problèmes suppression binomes');
 		if($e == "on") mysql_query('DELETE FROM eleves') or die('Problème suppression eleves');
@@ -514,13 +528,16 @@ class prof
 		echo '<p class="granted">Remise à zéro effectuée !</p>';
 	}
 	
+	/*
+	* Génere le compteur projet/soutenance au format .csv
+	*/
 	public function generer_compteur_csv() {
-		$fichier = fopen('../files/compteur_projet.csv', 'w');
+		$fichier = fopen('../files/compteur_projet.csv', 'w'); // on crée le fichier CSV s'il n'existe pas dans le dossier files
 		
-		fputcsv($fichier, array("Nom", "Nombre de projet(s)", "Détail", "Nombre de soutenances"));
+		fputcsv($fichier, array("Nom", "Nombre de projet(s)", "Détail", "Nombre de soutenances")); // on ajoute les intitulés des colonnes dans le fichier
 		
-		$sql = mysql_query("SELECT login,nom,prenom FROM prof");
-		while ($donnees = mysql_fetch_array($sql))
+		$sql = mysql_query("SELECT login,nom,prenom FROM prof"); // on récupere tous les professeurs
+		while ($donnees = mysql_fetch_array($sql)) // pour chaque prof
 		{
 	
 			$compteurtot = mysql_query("SELECT count(id_proj) FROM projets WHERE (tuteur1 ='" . $donnees['login'] . "' OR tuteur2 = '" . $donnees['login'] . "')"); // nombre de projet total où est le tuteur
@@ -536,15 +553,15 @@ class prof
 			$compteurdemiprojet =  $compteurdemiprojet * 0.5;
 			$compteurtot = $compteurdemiprojet + $compteurprojet;
 			
-			$ret = mysql_query("SELECT count(s.id_bin) FROM binome b,soutenance s,projets p WHERE (s.id_bin = b.num AND b.id_proj = p.id_proj) AND (p.tuteur1 ='" . $donnees['login'] . "' OR p.tuteur2 ='" . $donnees['login'] . "' OR s.tuteur_comp='" . $donnees['login'] . "')");
+			$ret = mysql_query("SELECT count(s.id_bin) FROM binome b,soutenance s,projets p WHERE (s.id_bin = b.num AND b.id_proj = p.id_proj) AND (p.tuteur1 ='" . $donnees['login'] . "' OR p.tuteur2 ='" . $donnees['login'] . "' OR s.tuteur_comp='" . $donnees['login'] . "')"); // on récupere le nombre de soutenances
 			$nbsout = mysql_fetch_assoc($ret);
-			fputcsv($fichier, array(
+			fputcsv($fichier, array( // on ajoute tout dans le fichier
 			$donnees['prenom'].' '.$donnees['nom'],
 			$compteurtot,
 			$compteurprojet.' projet(s) et '.$nbdemiprojet.' demi-projet(s))',
 			$nbsout['count(s.id_bin)']));
 		}
-		fclose($fichier);
+		fclose($fichier); // fermeture du fichier
 	}	
 }
 ?>

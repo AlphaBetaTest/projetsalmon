@@ -2,10 +2,9 @@
 
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit(1))
+if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'administrateur
 {
-
-	$objet->generer_compteur_csv();
+	$objet->generer_compteur_csv(); // on lance la génération du compteur de projet/soutenances en format CSV
 	echo '<br /><a href="../files/compteur_projet.csv">Télécharger en fichier CSV le compteur</a><br /><br />';
 
 	echo ' <table>
@@ -14,8 +13,8 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	<th>Détail</th>
 	<th>Nombre de soutenances';
 
-	$sql = mysql_query("SELECT login,nom,prenom FROM prof");
-	while ($donnees = mysql_fetch_array($sql))
+	$sql = mysql_query("SELECT login,nom,prenom FROM prof"); // On récupere tous les professeurs
+	while ($donnees = mysql_fetch_array($sql)) // pour chaque professeur
 	{
 
 		$compteurtot = mysql_query("SELECT count(id_proj) FROM projets WHERE (tuteur1 ='" . $donnees['login'] . "' OR tuteur2 = '" . $donnees['login'] . "')"); // nombre de projet total où est le tuteur
@@ -31,7 +30,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 		$compteurdemiprojet =  $compteurdemiprojet * 0.5;
 		$compteurtot = $compteurdemiprojet + $compteurprojet;
 		
-		$ret = mysql_query("SELECT count(s.id_bin) FROM binome b,soutenance s,projets p WHERE (s.id_bin = b.num AND b.id_proj = p.id_proj) AND (p.tuteur1 ='" . $donnees['login'] . "' OR p.tuteur2 ='" . $donnees['login'] . "' OR s.tuteur_comp='" . $donnees['login'] . "')");
+		$ret = mysql_query("SELECT count(s.id_bin) FROM binome b,soutenance s,projets p WHERE (s.id_bin = b.num AND b.id_proj = p.id_proj) AND (p.tuteur1 ='" . $donnees['login'] . "' OR p.tuteur2 ='" . $donnees['login'] . "' OR s.tuteur_comp='" . $donnees['login'] . "')"); // on compte le nombre de soutenances
 		$nbsout = mysql_fetch_assoc($ret);
 		echo '<tr>
 		<td>' . $donnees['prenom'] . ' ' . $donnees['nom'] . '</td>

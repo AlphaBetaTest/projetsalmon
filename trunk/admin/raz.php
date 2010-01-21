@@ -6,7 +6,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	echo '<h1>Remettre à zéro</h1>';
 	
 	
-	if(isset($_POST['binomes'])) {
+	if(isset($_POST['binomes'])) { // traitement du formulaire
 		$objet->RAZ($_POST['binomes'], $_POST['eleves'], $_POST['dates'], $_POST['indisponibilites'], $_POST['soutenance'], $_POST['projets'], $_POST['souhaits']);
 	}
 	

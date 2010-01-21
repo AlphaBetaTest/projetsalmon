@@ -5,7 +5,7 @@
 	SELECT s.salle,s.date,s.tuteur_comp,b.niveau,b.nom1,b.nom2,p.tuteur1,p.tuteur2 
 	FROM soutenance s, binome b, projets p 
 	WHERE (s.id_bin = b.num) AND (b.id_proj = p.id_proj)
-	ORDER BY date ASC");
+	ORDER BY date ASC"); // jointure permettant de récupérer les différentes soutenances avec le nom des tuteurs convoqués et le binome concerné
 	
 	echo '<table>
 			<th class="border_cellule">Bin&ocirc;me</th>
@@ -14,7 +14,7 @@
 			<th class="border_cellule">Date</th>
 			<th class="border_cellule">Niveau</th>';
 	
-	while($donnees = mysql_fetch_array($retour)) {
+	while($donnees = mysql_fetch_array($retour)) { // pour chaque soutenance
 		$date = date('d/m/Y \a H\h', $donnees['date']);
 		
 		echo '<tr>

@@ -1,7 +1,7 @@
 <?php
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit(1))
+if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // page réservée a l'administrateur
 {
 	echo '<h1>Indisponibilités de : '.ucfirst($_GET['log']).'</h1>';
 	
@@ -24,7 +24,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 		$heures_memorisee_jeudi = explode(";", $indispos['jeudi']);
 		$heures_memorisee_vendredi = explode(";", $indispos['vendredi']);
 		
-		for ($row = 1 ; $row <= 11 ; $row++)
+		for ($row = 1 ; $row <= 11 ; $row++) // pour chaque heure : de 8h a 18h - la tranche de 8h a 9h correspond a 1, 9h-10h : 2 etc.
 		{
 			$h = $row + 7;
 			echo '<tr>

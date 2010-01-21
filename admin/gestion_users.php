@@ -1,10 +1,10 @@
 <?php
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit(1))
+if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'administrateur
 {
 
-	if (isset($_GET['log']) && isset($_GET['type']))
+	if (isset($_GET['log']) && isset($_GET['type'])) // souhaite t-on supprimer un utilisateur ?
 		$objet->supprimer_utilisateur($_GET['log'],$_GET['type']);		
 	
 	echo '<h1>Gestion des utilisateurs</h1>
@@ -31,21 +31,21 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	{
 		echo '<th class="border_cellule">Admin</th>';
 	}
-	$type == "eleves" ? $nb = 2 : $nb = 3;
+	$type == "eleves" ? $nb = 2 : $nb = 3; // condition ternaire
 	echo '<th class="border_cellule" colspan="' . $nb . '">Actions</th>';
 
-	isset($_POST['type']) ? $type = $_POST['type'] : $type = "prof";	
+	isset($_POST['type']) ? $type = $_POST['type'] : $type = "prof"; // condition ternaire
 	if (isset($_GET['type']))
 		$type = $_GET['type'];
-	$ret = mysql_query("SELECT * FROM " . $type);
-	while ($user = mysql_fetch_array($ret))
+	$ret = mysql_query("SELECT * FROM " . $type); // on récupere soit les éleves soit les professeurs
+	while ($user = mysql_fetch_array($ret)) // pour chaque tuple : on affiche nom, prénom, login et actions
 	{
 		echo '<tr>
 			<td class="border_cellule">' . $user['nom'] . '</td>
 			<td class="border_cellule">' . $user['prenom'] . '</td>
 			<td class="border_cellule">' . $user['login'] . '</td>
 			<td class="border_cellule">'; 
-		if ($type == "eleves") 
+		if ($type == "eleves")
 		{
 			echo $user['groupe'];
 		}
@@ -56,7 +56,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 		echo '</td>';
 		
 		if ($type == "eleves")
-		{					
+		{
 			echo '<td class="border_cellule">' . $user['niveau'] . '</td>
 			<td class="border_cellule">';
 			if($user['boolbin'] == 1) echo 'Oui'; else echo 'Non';

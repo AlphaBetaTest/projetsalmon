@@ -9,9 +9,9 @@ if ($_GET['niveau'] == "")
 }
 else
 {
-	if (datecorrecte(time(), $_GET['niveau']))
+	if (datecorrecte(time(), $_GET['niveau'])) // est-ce que la date de publication des affectations a été atteinte
 	{
-		$sql = mysql_query("SELECT DISTINCT p.id_proj, p.tuteur1, p.tuteur2, p.titre, p.binwish FROM projets p, binome b WHERE (p.id_proj = b.id_proj) AND b.niveau='" . $_GET['niveau'] . "' ORDER BY p.id_proj ASC");		
+		$sql = mysql_query("SELECT DISTINCT p.id_proj, p.tuteur1, p.tuteur2, p.titre, p.binwish FROM projets p, binome b WHERE (p.id_proj = b.id_proj) AND b.niveau='" . $_GET['niveau'] . "' ORDER BY p.id_proj ASC"); // jointure permettant de récupérer les sujets affectés aux différents binomes avec le nom des binomes		
 		
 		echo '<table>
 		<tr>
@@ -21,25 +21,25 @@ else
 		<th class="border_bottom">Intitulé des sujets</th>
 		<th class="border_bottom">Nb binômes souhaité</th>
 		</tr>';
-		if (mysql_num_rows($sql) == 0)		
+		if (mysql_num_rows($sql) == 0)	// s'il n'y a pas d'affectation	
 			echo '<tr><td colspan="5">Aucune affectation n\'a &eacute;t&eacute; effectu&eacute; </td></tr>';
 		else
 		{			
-			while ($donnees = mysql_fetch_array($sql))
+			while ($donnees = mysql_fetch_array($sql)) // pour chaque affectation
 			{
 				
-				$cpt = mysql_query("SELECT count(id_proj) FROM binome WHERE id_proj = '" . $donnees['id_proj'] . "'");
-				$cpt = mysql_fetch_assoc($cpt);
+				$cpt = mysql_query("SELECT count(id_proj) FROM binome WHERE id_proj = '" . $donnees['id_proj'] . "'"); // on récupere le nombre d'affectation qu'il y a eu par projet
+				$cpt = mysql_fetch_assoc($cpt); 
 				
 				$cpt = $cpt['count(id_proj)']; // le compteur d'affectation	
 				$i = 0;
-				$n = mysql_query("SELECT nom1,nom2 FROM binome WHERE id_proj = '" . $donnees['id_proj'] . "'");
+				$n = mysql_query("SELECT nom1,nom2 FROM binome WHERE id_proj = '" . $donnees['id_proj'] . "'"); // on récupere le nom des deux binomes
 
 				while($noms = mysql_fetch_array($n))  // les noms
 				{
 					$chaine_noms .= $noms['nom1'] . '-' . $noms['nom2'] . ' & ';	
 				}		
-				$chaine_noms = substr($chaine_noms,0,-2); // supprime le dernier caractère pour éviter d'avoir un '& ' en fin de chaine.
+				$chaine_noms = substr($chaine_noms,0,-2); // supprime le dernier caractere pour éviter d'avoir un '& ' en fin de chaine.
 
 					echo '<tr>';
 					echo '<td>' . $donnees['tuteur1'];	
@@ -62,12 +62,12 @@ else
 	}
 }
 
-function datecorrecte($now, $niveau)
+function datecorrecte($now, $niveau) // fonction qui permet de vérifier si on peut afficher les affectations : la date de publication a t-elle été atteinte ?
 {
-	$date = mysql_query("SELECT affectation_sujet FROM date WHERE niveau = '".$niveau."'");
+	$date = mysql_query("SELECT affectation_sujet FROM date WHERE niveau = '".$niveau."'"); // on récupere la date d'affectation des sujets
 	$date = mysql_fetch_assoc($date);
 	$date = $date['affectation_sujet'];
-	if ($now > $date)
+	if ($now > $date) // a t-on dépassé cette date ?
 	return true;	
 	else
 	return false;

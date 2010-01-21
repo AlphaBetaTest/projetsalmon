@@ -3,7 +3,7 @@
 
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->type() == "prof")
+if ($_SESSION['objet'] != "" && $objet->type() == "prof") // page reservee aux professeurs
 {
 	
 	echo '<h1>Indiquer ses indisponibilités</h1><br/>';
@@ -14,9 +14,9 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 	
 	if (isset($_POST['exist']))
 	{
-		if($indispos == "")
+		if($indispos == "") // si elles n'existent pas alors c'est un ajout
 			$objet->ajouter_indisponibilite();
-		else
+		else // sinon c'est une modification
 			$objet->modifier_indisponibilite();
 	}
 	
@@ -37,7 +37,7 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 	$heures_memorisee_jeudi = explode(";", $indispos['jeudi']);
 	$heures_memorisee_vendredi = explode(";", $indispos['vendredi']);
 
-	for ($i = 1; $i <= 11 ; $i++)
+	for ($i = 1; $i <= 11 ; $i++) // on affiche les cases avec leurs indisponibilites ou non
 	{
 		$h = $i + 7;			
 		

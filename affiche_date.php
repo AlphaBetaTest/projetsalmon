@@ -11,12 +11,12 @@ if ($_GET['niveau'] == "")
 else
 {
 	$date = mysql_query("SELECT * FROM date WHERE niveau='" . $_GET['niveau'] . "' ORDER BY annee DESC");
-	$date = mysql_fetch_assoc($date); // on récupère la dernière année donc l'année courante
+	$date = mysql_fetch_assoc($date); // on récupere les dates du niveau sélectionné dans l'url
 
 	setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra"); // permet d'avoir la date en français a partir du timestamp
 
 	echo '<table>';
-	if (!empty($date['annee']))
+	if (!empty($date['annee'])) // si les dates ont été remplies
 	{	
 		echo '
 		<tr> 

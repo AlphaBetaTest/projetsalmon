@@ -1,7 +1,7 @@
 <?php
 $objet = unserialize($_SESSION['objet']);
 
-if ($_SESSION['objet'] != "" && $objet->get_droit(1))
+if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'administrateur
 {		
 	echo '<h1>Liste des soutenances</h1>';
 	
@@ -21,8 +21,8 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 	$ret = mysql_query(
 						"SELECT s.id_bin,s.date,s.salle,p.tuteur1,p.tuteur2,s.tuteur_comp, b.niveau
 						FROM binome b,soutenance s,projets p 
-						WHERE s.id_bin = b.num AND b.id_proj = p.id_proj");	
-	while ($soutenance = mysql_fetch_array($ret))
+						WHERE s.id_bin = b.num AND b.id_proj = p.id_proj");	// jointure permettant de récupérer les différentes soutenances avec le nom des tuteurs convoqués et le numéro de binome concerné
+	while ($soutenance = mysql_fetch_array($ret)) // pour chaque soutenance
 	{
 		$date = date("d/m/Y à G\hi",$soutenance['date']);
 		echo '<tr>
@@ -49,8 +49,6 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1))
 							 Nombre de soutenances : ' . $cptsoutenance . '</td>
 		</tr>		
 		</table>';	
-		
-		//suppression d'un tuple
 }
 else
 {
@@ -58,8 +56,8 @@ echo 'Vous n\'avez pas accès à cette page
 <script type="text/javascript">redirection("login");</script>';
 }
 
-function del ($id)
+function del ($id) // si on veut supprimer une soutenance
 {
 	mysql_query("DELETE FROM soutenance WHERE id_bin = '" . $id . "'");
-	echo 'Soutenance supprim&eacute;e';
+	echo '<p class="granted">Soutenance supprim&eacute;e</p>';
 }

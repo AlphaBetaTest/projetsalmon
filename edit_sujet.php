@@ -1,10 +1,9 @@
 <?php
 
 $objet = unserialize($_SESSION['objet']);
-if ($_SESSION['objet'] != "" && $objet->type() == "prof")
+if ($_SESSION['objet'] != "" && $objet->type() == "prof") // Page réservé aux professeurs
 {
-	
-	if(isset($_GET['action']) && isset($_GET['sujet'])) {
+	if(isset($_GET['action']) && isset($_GET['sujet'])) { // Si l'utilisateur a voulu supprimer le sujet
 		$objet->supprimer_sujet($_GET['sujet']);	
 	}
 	
@@ -12,14 +11,15 @@ if ($_SESSION['objet'] != "" && $objet->type() == "prof")
 	
 	echo '<p>Vous pouvez selectionner le projet a supprimer. Une description du sujet est visible au survol du titre. Si vous souhaitez éditer un sujet, vous devez d\'abord le supprimer, puis le réenregistrer.</p>';
 	
-	$sujets = $objet->recup_sujets();
+	$sujets = $objet->recup_sujets(); // on récupere la liste des sujets qu'a proposé l'utilisateur
 
 	if(!empty($sujets)) {
 		echo '<table>';
 		echo '<th>Titre du sujet</th>
 		<th>Niveau</th>
 		<th>Action</th>';
-		foreach($sujets as $value) {
+		
+		foreach($sujets as $value) { // on affiche tous les sujets
 			echo '<tr>';
 			
 			if(empty($value['description'])) $description = "Pas de description"; else $description = $value['description'];

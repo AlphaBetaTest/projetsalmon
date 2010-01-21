@@ -4,10 +4,10 @@
 
 <?php
 
-if (isset($_SESSION['objet']))	 
+if (isset($_SESSION['objet']))
 {
 	$objet = unserialize($_SESSION['objet']);
-	$r = mysql_query("SELECT nom,prenom FROM " . $objet->type() . " WHERE login='" . $objet->info_login() . "'");
+	$r = mysql_query("SELECT nom,prenom FROM " . $objet->type() . " WHERE login='" . $objet->info_login() . "'"); // On récupere le nom et le prénom de l'utilisateur
 	$n = mysql_fetch_assoc($r);
 	echo '<div style="border:2px #000 solid;text-align:center;padding:5px;width:300px;margin-left:auto;margin-right:auto;">
 			<p>Bonjour <b>'. ucfirst(strtolower($n['prenom'])) . ' ' . ucfirst(strtolower($n['nom'])) . '</b>

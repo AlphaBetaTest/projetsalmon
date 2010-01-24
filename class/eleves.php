@@ -247,7 +247,7 @@ class eleves
 	{
 		
 		$req1 = mysql_query("SELECT num FROM binome WHERE ((nom1='" . $this->login . "' OR nom2 = '" . $this->login . "') AND valide='1')");
-		$retour1 = mysql_fetch_assoc($req1);	
+		$retour1 = mysql_fetch_assoc($req1);
 		return $retour1['num'];
 	}
 	
@@ -259,7 +259,7 @@ class eleves
 	
 		$req = mysql_query("SELECT * FROM projets");
 		while ($donnees = mysql_fetch_array($req)) // pour chaque projets : on va vérifier que les numéros des souhaits correspondent
-		{		
+		{
 			if ($_POST['proj' . $donnees['id_proj']] != "")
 			{
 				$i = $_POST['proj' . $donnees['id_proj']];
@@ -267,19 +267,19 @@ class eleves
 				switch($i)
 				{
 					case 1:
-						$wish1 = $_POST['proj' . $donnees['id_proj']];
+						$wish1 = $donnees['id_proj'];
 						break;
 					case 2:
-						$wish2 = $_POST['proj' . $donnees['id_proj']];
+						$wish2 = $donnees['id_proj'];
 						break;
 					case 3:
-						$wish3 = $_POST['proj' . $donnees['id_proj']];
+						$wish3 = $donnees['id_proj'];
 						break;
 					case 4:
-						$wish4 = $_POST['proj' . $donnees['id_proj']];
+						$wish4 = $donnees['id_proj'];
 						break;
 					case 5:
-						$wish5 = $_POST['proj' . $donnees['id_proj']];
+						$wish5 = $donnees['id_proj'];
 						break;
 					default:
 						echo 'Erreur, vous avez saisi une mauvaise valeur';

@@ -9,11 +9,18 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves") // Page réservée aux
 	
 		if($numbinome != "") // Si l'utilisateur n'a pas encore de numéro c'est qu'il n'est pas en binome
 		{
+			// traitement formulaire
+			if (isset($_POST['ok']))
+			{
+				echo $objet->traitement_voeux($numbinome);				
+			}
+			
 			$retour = mysql_query('SELECT * FROM wish WHERE id_bin = "'.$numbinome.'"'); // On récupere les choix déja fait par le binome
+			
 			if(mysql_num_rows($retour) == 0) { // Si le binome n'a pas encore fait de choix
 			
 				if ($objet->datecorrecte("formulation_voeux")) // Si le binome peut encore formuler ses voeux
-				{
+				{					
 					echo '<form action="#" method="post" name="formulaire">	
 						  <p>Veuillez formuler 5 voeux en numérotant de 1 à 5 les projets : </p>';	
 			
@@ -27,13 +34,6 @@ if ($_SESSION['objet'] != "" && $objet->type() == "eleves") // Page réservée aux
 					
 					echo '<p class="info"><input type="hidden" name="ok" value="1" /></p>
 					<p class="info"><input style="border:2px outset white;text-align:center;" type="submit" value="Envoyer" /></p></form>';
-	
-				// traitement résultat formulaire
-	
-					if (isset($_POST['ok']))
-					{
-						echo $objet->traitement_voeux($numbinome);				
-					}
 					
 				}
 				else

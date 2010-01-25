@@ -23,12 +23,21 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'admin
 	
 	echo '<p>
 		  <table>
-		  <th>Horaire</th>
-		  <th>Lundi</th>
-		  <th>Mardi</th>
-		  <th>Mercredi</th>
-		  <th>Jeudi</th>
-		  <th>Vendredi</th>';
+		  <th>Horaire</th>';
+		  
+	$nom_jour_debut = date("w", $d['deb_soutenance'])-1; // On détermine sur quel jour tombe le début des soutenances (lundi, jeudi, etc)
+	
+	$jour1 = date("j/m/Y", $d['deb_soutenance']-60*60*24*$nom_jour_debut);
+	$jour2 = date("j/m/Y", $d['deb_soutenance']-60*60*24*($nom_jour_debut-1));
+	$jour3 = date("j/m/Y", $d['deb_soutenance']-60*60*24*($nom_jour_debut-2));
+	$jour4 = date("j/m/Y", $d['deb_soutenance']-60*60*24*($nom_jour_debut-3));
+	$jour5 = date("j/m/Y", $d['deb_soutenance']-60*60*24*($nom_jour_debut-4));
+	
+	echo '<th>Lundi<br />('.$jour1.')</th>
+		  <th>Mardi<br />('.$jour2.')</th>
+		  <th>Mercredi<br />('.$jour3.')</th>
+		  <th>Jeudi<br />('.$jour4.')</th>
+		  <th>Vendredi<br />('.$jour5.')</th>';
 	
 	for ($i = 1; $i <= 11 ; $i++) // pour chaque tranche horaire on affiche une case et un survol contenant la liste des professeurs disponibles
 	{
@@ -77,7 +86,7 @@ if ($_SESSION['objet'] != "" && $objet->get_droit(1)) // Page réservée a l'admin
 		
 		echo '<table>';
 		echo '<th>Horaire</th>';
-		echo '<th>'.ucfirst($jour_soutenance).'</th><tr />';
+		echo '<th>'.ucfirst($jour_soutenance).'<br />('.date("d/m/Y", $d['soutenance_etranger']).')</th><tr />';
 				
 		for ($i = 1; $i <= 11 ; $i++) { // on affiche toutes les tranches horaires
 			$h = $i + 7;

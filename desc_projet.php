@@ -39,7 +39,7 @@
     </p>	
     <table class="addproj">
     <tr>
-    <td colspan="2"><?php if(!empty($donnees['dom_appl'])) echo $donnees['dom_appl']; else echo "Aucune"; ?></td>
+    <td colspan="2"><?php if(!empty($donnees['qualif'])) echo $donnees['qualif']; else echo "Aucune"; ?></td>
     </tr>
     </table>	
     <br/>
@@ -47,9 +47,9 @@
     <b>Domaines d'application : </b></br>
     <textarea name="domaine" cols="100" rows="4" disabled="true"><?php if(!empty($donnees['dom_appl'])) echo $donnees['dom_appl']; else echo "Aucun"; ?></textarea><br/><br/>
     <b>Matériels & logiciels utilisés : </b><br/>
-    <textarea name="matos" cols="100" rows="2" disabled="true"><?php if(!empty($donnees['dom_appl'])) echo $donnees['mat_log']; else echo "Aucun"; ?></textarea><br/><br/>
+    <textarea name="matos" cols="100" rows="2" disabled="true"><?php if(!empty($donnees['mat_log'])) echo $donnees['mat_log']; else echo "Aucun"; ?></textarea><br/><br/>
     <b>Remarques : </b><br/>
-    <textarea name="rem" cols="100" rows="7" disabled="true"><?php if(!empty($donnees['dom_appl'])) echo $donnees['remarques']; else echo "Aucune"; ?></textarea>
+    <textarea name="rem" cols="100" rows="7" disabled="true"><?php if(!empty($donnees['remarques'])) echo $donnees['remarques']; else echo "Aucune"; ?></textarea>
     </p>
     
     </form>
